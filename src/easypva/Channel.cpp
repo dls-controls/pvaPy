@@ -78,20 +78,17 @@ void Channel::put(const PvObject& pvObject, const std::string& requestDescriptor
     }
 }
 
-void Channel::put(const std::vector<std::string>& values)
+void Channel::put(const shared_vector<const std::string>& values)
 {
     put(values, DefaultRequestDescriptor);
 }
 
-void Channel::put(const std::vector<std::string>& values, const std::string& requestDescriptor) 
+void Channel::put(const shared_vector<const std::string>& value, const std::string& requestDescriptor) 
 {
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         EasyPutDataPtr easyData = easyPut->getData();
-        size_t len = values.size();
-        shared_vector<string> value(len);
-        for(size_t i=0; i<len; ++i) value[i] = values[i];
-        easyData->putStringArray(freeze(value));
+        easyData->putStringArray(value);
         easyPut->put();
     } catch (std::runtime_error e) {
         string message("channel ");
@@ -122,11 +119,11 @@ void Channel::put(const std::string& value, const std::string& requestDescriptor
 void Channel::put(const boost::python::list& pyList, const std::string& requestDescriptor) 
 {
     int listSize = boost::python::len(pyList);
-    std::vector<std::string> values(listSize);
+    shared_vector<std::string> values(listSize);
     for (int i = 0; i < listSize; i++) {
         values[i] = PyUtility::extractStringFromPyObject(pyList[i]);
     }
-    put(values, requestDescriptor);
+    put(freeze(values), requestDescriptor);
 }
 
 void Channel::put(const boost::python::list& pyList)

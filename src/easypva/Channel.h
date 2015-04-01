@@ -27,8 +27,10 @@ public:
     virtual PvObject* get();
     virtual void put(const PvObject& pvObject, const std::string& requestDescriptor);
     virtual void put(const PvObject& pvObject);
-    virtual void put(const std::vector<std::string>& values, const std::string& requestDescriptor);
-    virtual void put(const std::vector<std::string>& values);
+    virtual void put(
+        const epics::pvData::shared_vector<const std::string>& values,
+        const std::string& requestDescriptor);
+    virtual void put(const epics::pvData::shared_vector<const std::string>& values);
     virtual void put(const std::string& value, const std::string& requestDescriptor);
     virtual void put(const std::string& value);
     virtual void put(const boost::python::list& pyList, const std::string& requestDescriptor);
