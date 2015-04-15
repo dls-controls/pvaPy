@@ -111,6 +111,31 @@ public:
     void setStructureArray(const boost::python::list& pyList);
     boost::python::list getStructureArray(const std::string& key=ValueFieldKey) const;
 
+    // Union fields
+    bool unionIsVariant(const std::string& key=ValueFieldKey) const;
+    boost::python::list unionGetFieldNames(const std::string& key=ValueFieldKey) const;
+    PvObject unionCreate(
+        const std::string& fieldName,
+        const std::string& key=ValueFieldKey) const;
+    PvObject unionSelect(
+        const std::string& fieldName,
+        const std::string& key=ValueFieldKey) const;
+    PvObject unionGet(const std::string& key=ValueFieldKey) const;
+    void unionSet(
+        const PvObject & value,
+        const std::string& key=ValueFieldKey);
+
+    // UnionArray fields
+    bool unionArrayIsVariant(const std::string& key=ValueFieldKey) const;
+    boost::python::list unionArrayGetFieldNames(const std::string& key=ValueFieldKey) const;
+    PvObject unionArrayCreateElement(
+        const std::string& fieldName,
+        const std::string& key=ValueFieldKey) const;
+    boost::python::list unionArrayGet(const std::string& key=ValueFieldKey) const;
+    void unionArraySet(
+        const boost::python::list& pyList,
+        const std::string& key= ValueFieldKey);
+    
 protected:
     epics::pvData::PVStructurePtr pvStructurePtr;
 private:

@@ -23,6 +23,7 @@ void checkFieldExists(const std::string& fieldName, const epics::pvData::PVStruc
 //
 // Field retrieval
 //
+
 epics::pvData::FieldConstPtr getField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
 
 epics::pvData::ScalarConstPtr getScalarField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
@@ -34,6 +35,10 @@ epics::pvData::StructureConstPtr getStructure(const std::string& fieldName, cons
 epics::pvData::PVStructurePtr getStructureField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
 
 epics::pvData::PVStructureArrayPtr getStructureArrayField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
+
+epics::pvData::PVUnionPtr getUnionField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
+
+epics::pvData::PVUnionArrayPtr getUnionArrayField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
 
 epics::pvData::PVBooleanPtr getBooleanField(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr);
 
@@ -89,6 +94,16 @@ void pyObjectToStructureField(const boost::python::object& pyObject, const std::
 void pyObjectToStructureArrayField(const boost::python::object& pyObject, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
 
 //
+// Conversion PY object => PV Union
+//
+void pyObjectToUnionField(const boost::python::object& pyObject, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
+
+//
+// Conversion PY object => PV Union Array
+//
+void pyObjectToUnionArrayField(const boost::python::object& pyObject, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
+
+//
 // Conversion PY [] => PV Scalar Array
 //
 void pyListToScalarArrayField(const boost::python::list& pyList, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
@@ -105,10 +120,17 @@ void pyDictToStructure(const boost::python::dict& pyDict, epics::pvData::PVStruc
 
 void pyDictToStructureField(const boost::python::dict& pyDict, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
 
+void pyDictToUnionField(const boost::python::dict& pyDict, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
+
 //
 // Conversion PY [{}] => PV Structure Array
 //
 void pyListToStructureArrayField(const boost::python::list& pyList, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
+
+//
+// Conversion PY [{}] => PV Union Array
+//
+void pyListToUnionArrayField(const boost::python::list& pyList, const std::string& fieldName, epics::pvData::PVStructurePtr& pvStructurePtr);
 
 //
 // Conversion PV Structure Array => PY [{}] 
@@ -144,6 +166,16 @@ void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::
 void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict);
 
 //
+// Add PV Union => PY {}
+// 
+void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict);
+
+//
+// Add PV Union Array => PY {}
+// 
+void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict);
+
+//
 // Conversion Structure => PY {}
 //
 void structureToPyDict(const epics::pvData::StructureConstPtr& structurePtr, boost::python::dict& pyDict);
@@ -174,26 +206,6 @@ void copyScalarArrayToStructure(const std::string& fieldName, epics::pvData::Sca
 // Template implementations
 //
 
-#if defined PVA_API_VERSION && PVA_API_VERSION == 430
-template<typename PvArrayType, typename CppType, typename PyType>
-void pyListToScalarArrayField(const boost::python::list& pyList, const std::string& fieldName, epics::pvData::ScalarType scalarType, epics::pvData::PVStructurePtr pvStructurePtr)
-{
-    int listSize = boost::python::len(pyList);
-    std::tr1::shared_ptr<PvArrayType> valueArray = std::tr1::static_pointer_cast<PvArrayType>(pvStructurePtr->getScalarArrayField(fieldName, scalarType));
-    std::vector<CppType> v(listSize);
-    for (int i = 0; i < listSize; i++) {
-        boost::python::extract<PyType> valueExtract(pyList[i]);
-        if (valueExtract.check()) {
-            v[i] = valueExtract();
-        }
-        else {
-            throw InvalidDataType("Invalid data type for element %d", i);
-        }
-    }
-    valueArray->setCapacity(listSize);
-    valueArray->put(0, listSize, v, 0);
-}
-#else
 template<typename PvArrayType, typename CppType, typename PyType>
 void pyListToScalarArrayField(const boost::python::list& pyList, const std::string& fieldName, epics::pvData::ScalarType scalarType, epics::pvData::PVStructurePtr pvStructurePtr)
 {
@@ -212,20 +224,7 @@ void pyListToScalarArrayField(const boost::python::list& pyList, const std::stri
     valueArray->setCapacity(listSize);
     valueArray->replace(freeze(v));
 }
-#endif // if defined PVA_API_VERSION && PVA_API_VERSION == 430
 
-#if defined PVA_API_VERSION && PVA_API_VERSION == 430
-template<typename PvArrayType, typename PvArrayDataType>
-void scalarArrayToPyList(const epics::pvData::PVScalarArrayPtr& pvScalarArrayPtr, boost::python::list& pyList) 
-{
-    int nDataElements = pvScalarArrayPtr->getLength();
-    PvArrayDataType arrayData;
-    std::tr1::static_pointer_cast<PvArrayType>(pvScalarArrayPtr)->get(0, nDataElements, arrayData);
-    for (int i = 0; i < nDataElements; ++i) {
-        pyList.append(arrayData.data[i]);
-    }
-}
-#else
 template<typename PvArrayType, typename CppType>
 void scalarArrayToPyList(const epics::pvData::PVScalarArrayPtr& pvScalarArrayPtr, boost::python::list& pyList) 
 {
@@ -236,20 +235,8 @@ void scalarArrayToPyList(const epics::pvData::PVScalarArrayPtr& pvScalarArrayPtr
         pyList.append(data[i]);
     }
 }
-#endif // if defined PVA_API_VERSION && PVA_API_VERSION == 430
 
 
-#if defined PVA_API_VERSION && PVA_API_VERSION == 430
-template<typename PvArrayType, typename PvArrayDataType>
-void copyScalarArrayToScalarArray(const epics::pvData::PVScalarArrayPtr& srcPvScalarArrayPtr, epics::pvData::PVScalarArrayPtr& destPvScalarArrayPtr)
-{
-    int nDataElements = srcPvScalarArrayPtr->getLength();
-    PvArrayDataType srcArrayData;
-    std::tr1::static_pointer_cast<PvArrayType>(srcPvScalarArrayPtr)->get(0, nDataElements, srcArrayData);
-    destPvScalarArrayPtr->setCapacity(nDataElements);
-    std::tr1::static_pointer_cast<PvArrayType>(destPvScalarArrayPtr)->put(0, nDataElements, srcArrayData.data, 0);
-}
-#else
 template<typename PvArrayType, typename CppType>
 void copyScalarArrayToScalarArray(const epics::pvData::PVScalarArrayPtr& srcPvScalarArrayPtr, epics::pvData::PVScalarArrayPtr& destPvScalarArrayPtr)
 {
@@ -260,7 +247,6 @@ void copyScalarArrayToScalarArray(const epics::pvData::PVScalarArrayPtr& srcPvSc
     destPvScalarArrayPtr->setCapacity(nDataElements);
     destPvScalarArrayPtr->putFrom(data);
 }
-#endif // if defined PVA_API_VERSION && PVA_API_VERSION == 430
 
 } // namespace PyPvDataUtility
 

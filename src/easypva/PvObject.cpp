@@ -10,6 +10,8 @@
 #include "boost/python/extract.hpp"
 #include "boost/python/stl_iterator.hpp"
 
+using namespace epics::pvData;
+using namespace std;
 
 // Static constants
 const char* PvObject::ValueFieldKey("value");
@@ -322,6 +324,196 @@ boost::python::dict PvObject::getStructure(const std::string& key) const
     boost::python::dict pyDict;
     PyPvDataUtility::structureFieldToPyDict(key, pvStructurePtr, pyDict);
     return pyDict;
+}
+
+// Union fields
+bool PvObject::unionIsVariant(const std::string& key) const
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   return pvUnion->getUnion()->isVariant();
+}
+
+boost::python::list PvObject::unionGetFieldNames(const std::string& key) const
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   StringArray names = pvUnion->getUnion()->getFieldNames();
+   boost::python::list pyList;
+   for(size_t i=0; i<names.size(); ++i) pyList.append(names[i]);
+   return pyList;
+}
+
+PvObject PvObject::unionCreate(
+    const std::string& fieldName,
+    const std::string& key) const
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   StringArray names(1);
+   PVFieldPtrArray pvfields(1);
+   names[0] = "value";
+   FieldConstPtr field;
+   UnionConstPtr u = pvUnion->getUnion();
+   if(u->isVariant()) {
+       field = getFieldCreate()->createVariantUnion();
+   } else {
+       field = u->getField(fieldName);
+   }
+   pvfields[0] = getPVDataCreate()->createPVField(field);
+   PVStructurePtr pv = getPVDataCreate()->createPVStructure(names,pvfields);
+   return PvObject(pv);
+}
+
+PvObject PvObject::unionSelect(
+    const std::string& fieldName,
+    const std::string& key) const
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   if(pvUnion->getUnion()->isVariant()) {
+       throw InvalidArgument("unionSelect not valid for variant union");
+   }
+   PVFieldPtr pvField;
+   try {
+       pvField = pvUnion->select(fieldName);
+   } catch (std::runtime_error e) {
+       throw InvalidArgument(" illegal fieldName");
+   }
+   return unionGet(key);
+}
+
+PvObject PvObject::unionGet(const std::string& key) const
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   PVFieldPtr pvField = pvUnion->get();
+   StringArray names(1);
+   PVFieldPtrArray pvfields(1);
+   names[0] = "value";
+   pvfields[0] = pvField;
+   PVStructurePtr pv = getPVDataCreate()->createPVStructure(names,pvfields);
+   return PvObject(pv);
+}
+
+void PvObject::unionSet(
+    const PvObject & value,
+    const std::string& key)
+{
+   PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(key);
+   if(!pvUnion) throw InvalidArgument("not a union field");
+   try {
+        PVFieldPtr pvFrom = value.getPvStructurePtr()->getSubField("value");
+        if(pvUnion->getUnion()->isVariant()) {
+            pvUnion->set(pvFrom);
+        } else {
+            FieldConstPtr field = pvFrom->getField();
+            int32 ind = -1;
+            FieldConstPtrArray fields = pvUnion->getUnion()->getFields();
+            for(size_t i=0; i< fields.size(); ++i) {
+                 if(fields[i]==field) {
+                     ind = i;
+                     break;
+                 }
+            }
+            if(ind<0) throw InvalidArgument("illegal value for this union");
+            pvUnion->set(ind,pvFrom);
+        }
+   } catch (std::runtime_error e) {
+       throw InvalidArgument(" illegal fieldName");
+   }
+
+}
+
+// UnionArray fields
+bool PvObject::unionArrayIsVariant(const std::string& key) const
+{
+   PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(key);
+   if(!pvUnionArray) throw InvalidArgument("not a union field");
+   return pvUnionArray->getUnionArray()->getUnion()->isVariant();
+}
+
+boost::python::list PvObject::unionArrayGetFieldNames(const std::string& key) const
+{
+   PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(key);
+   if(!pvUnionArray) throw InvalidArgument("not a union field");
+   StringArray names = pvUnionArray->getUnionArray()->getUnion()->getFieldNames();
+   boost::python::list pyList;
+   for(size_t i=0; i<names.size(); ++i) pyList.append(names[i]);
+   return pyList;
+}
+
+PvObject PvObject::unionArrayCreateElement(
+    const std::string& fieldName,
+    const std::string& key) const
+{
+   PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(key);
+   if(!pvUnionArray) throw InvalidArgument("not a union array field");
+   StringArray names(1);
+   PVFieldPtrArray pvfields(1);
+   names[0] = "value";
+   FieldConstPtr field;
+   UnionConstPtr u = pvUnionArray->getUnionArray()->getUnion();
+   if(u->isVariant()) {
+       field = getFieldCreate()->createVariantUnion();
+   } else {
+       field = u->getField(fieldName);
+   }
+   pvfields[0] = getPVDataCreate()->createPVField(field);
+   PVStructurePtr pv = getPVDataCreate()->createPVStructure(names,pvfields);
+   return PvObject(pv);
+}
+
+boost::python::list PvObject::unionArrayGet(const std::string& key) const
+{
+    PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(key);
+    if(!pvUnionArray) throw InvalidArgument("not a union array field");
+    PVUnionArray::const_svector data = pvUnionArray->view();
+    boost::python::list pyList;
+    for(size_t i=0; i<data.size(); ++i) {
+        StringArray names(1);
+        PVFieldPtrArray pvfields(1);
+        names[0] = "value";
+        pvfields[0] = data[i]->get();
+        PVStructurePtr pv = getPVDataCreate()->createPVStructure(names,pvfields);
+        PvObject xx(pv);
+        pyList.append(PvObject(pv));
+    }
+    return pyList;
+}
+
+void PvObject::unionArraySet(
+    const boost::python::list& pyList,
+    const std::string& key)
+{
+    PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(key);
+    if(!pvUnionArray) throw InvalidArgument("not a union array field");
+    UnionConstPtr u = pvUnionArray->getUnionArray()->getUnion();
+    FieldConstPtrArray fields = u->getFields();
+    int listSize = boost::python::len(pyList);
+    PVUnionArray::svector data(listSize);
+    for(size_t i=0; i<data.size(); ++i) {
+        PvObject pvObject = boost::python::extract<PvObject>(pyList[i]);
+        PVStructurePtr pv = pvObject.getPvStructurePtr();
+        PVFieldPtr pvFrom = pv->getSubField(key);
+        PVUnionPtr pvUnion = getPVDataCreate()->createPVUnion(u);
+        if(u->isVariant()) {
+            pvUnion->set(pvFrom);
+        } else {
+            FieldConstPtr field = pvFrom->getField();
+            int32 ind = -1;
+            for(size_t i=0; i< fields.size(); ++i) {
+                 if(fields[i]==pv->getSubField(key)->getField()) {
+                     ind = i;
+                     break;
+                 }
+            }
+            if(ind<0) throw InvalidArgument("an element is illegal for this union array");
+            pvUnion->set(ind,pvFrom);
+        }
+        data[i] = pvUnion;
+    }
+    pvUnionArray->replace(freeze(data));
 }
 
 // Structure array modifiers/accessors

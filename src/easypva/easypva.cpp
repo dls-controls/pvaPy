@@ -418,6 +418,140 @@ BOOST_PYTHON_MODULE(easypva)
             "::\n\n"
             "    dictList = pv.getStructureArray('aStructArray')\n\n"))
 
+        .def("unionIsVariant",&PvObject::unionIsVariant,
+            (arg("key") = "value"),
+            "Is a field a variant union?\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "return (True,False) if (is,is not)  a variant union\n"
+            "throws InvalidArgument if field is not a union.\n\n"
+            "example\n"
+            "    value = pv.unionIsVariant()\n\n")
+
+        .def("unionGetFieldNames",&PvObject::unionGetFieldNames,
+            (arg("key") = "value"),
+            "Get the field names for a regular union\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "return list of union fieldnames. If variant union then empty list\n"
+            "throws InvalidArgument if field is not a union.\n\n"
+            "example\n"
+            "    value = pv.unionGetFieldNames()\n\n")
+
+        .def("unionSelect",&PvObject::unionSelect,
+            (arg("key") = "value"),
+            "Get a union with selected field name\n"
+            "arg\n"
+            "    fieldName The union field name.\n"
+            "    name fieldName = \"value\"\n"
+            "Returns PvObject.\n"
+            "    The pvObject is a structure as follows:\n"
+            "    structure\n"
+            "        union value\n"
+            "throws InvalidArgument if field is not a union.\n"
+            "       ValueError if variant union or illegal union field name.\n\n"
+            "example\n"
+            "    value = pv.unionSelect(unionFieldName,fieldName)\n\n")
+
+        .def("unionCreate",&PvObject::unionCreate,
+            (arg("key") = "value"),
+            "Create a union with selected field name\n"
+            "arg\n"
+            "    fieldName The union field name.\n"
+            "    name fieldName = \"value\"\n"
+            "Returns PvObject.\n"
+            "    The pvObject is a structure as follows:\n"
+            "    structure\n"
+            "        union value\n"
+            "throws InvalidArgument if field is not a union.\n"
+            "       ValueError if variant union or illegal union field name.\n\n"
+            "example\n"
+            "    value = pv.unionCreate(unionFieldName,fieldName)\n\n")
+
+        .def("unionGet",&PvObject::unionGet,
+            (arg("key") = "value"),
+            "Get a union with selected field name\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "Returns PvObject.\n"
+            "    The pvObject is a structure as follows:\n"
+            "    structure\n"
+            "        union value\n"
+            "throws InvalidArgument if field is not a union.\n\n"
+            "example\n"
+            "    value = pv.unionGet(fieldName)\n\n")
+
+        .def("unionSet",&PvObject::unionSet,
+            (arg("key") = "value"),
+            "Set the value of a union field\n"
+            "arg\n"
+            "    value a PvObject which must be a structure as follows:\n"
+            "        structure\n"
+            "            union value\n"
+            "    name fieldName = \"value\"\n"
+            "throws InvalidArgument if field is not a union.\n\n"
+            "example\n"
+            "    value = pv.unionSet(PvObject,fieldName)\n\n")
+
+        .def("unionArrayIsVariant",&PvObject::unionArrayIsVariant,
+            (arg("key") = "value"),
+            "Is a field a variant union array?\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "return (True,False) if (is,is not)  a variant union array\n"
+            "throws InvalidArgument if field is not a union array.\n\n"
+            "example\n"
+            "    value = pv.unionArrayIsVariant()\n\n")
+
+        .def("unionArrayGetFieldNames",&PvObject::unionArrayGetFieldNames,
+            (arg("key") = "value"),
+            "Get the field names for a regular union array\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "return list of union fieldnames. If variant union then empty list\n"
+            "throws InvalidArgument if field is not a union array.\n\n"
+            "example\n"
+            "    value = pv.unionArrayGetFieldNames()\n\n")
+
+
+        .def("unionArrayCreateElement",&PvObject::unionArrayCreateElement,
+            (arg("fieldName") = "",arg("key") = "value"),
+            "Create a union with selected field name\n"
+            "arg\n"
+            "    fieldName The union field name.\n"
+            "    name fieldName = \"value\"\n"
+            "Returns PvObject.\n"
+            "    The pvObject is a structure as follows:\n"
+            "    structure\n"
+            "        union value\n"
+            "throws InvalidArgument if field is not a union.\n"
+            "       ValueError if variant union or illegal union field name.\n\n"
+            "example\n"
+            "    value = pv.unionArrayCreateElement(unionFieldName,fieldName)\n\n")
+
+	.def("unionArraySet", &PvObject::unionArraySet,
+            (arg("key") = "value"),
+            "Sets union array for the given PV field.\n"
+            "arg\n"
+            "    value a list of PvObjects. Each PvObject must be a structure as follows:\n"
+            "        structure\n"
+            "            union value\n"
+            "    name fieldName = \"value\"\n"
+            "throws InvalidArgument if field is not a union array.\n\n")
+
+        .def("unionArrayGet", &PvObject::unionArrayGet,
+            (arg("key") = "value"),
+            "Get a union array with selected field name\n"
+            "arg\n"
+            "    name fieldName = \"value\"\n"
+            "Returns a list of PvObjects.\n"
+            "    Each pvObject is a structure as follows:\n"
+            "    structure\n"
+            "        union value\n"
+            "throws InvalidArgument if field is not a union.\n\n"
+            "example\n"
+            "    value = pv.unionArrayGet(fieldName)\n\n")
+
         .def("toDict", 
             &PvObject::toDict,
             "Converts PV structure to python dictionary.\n\n"
