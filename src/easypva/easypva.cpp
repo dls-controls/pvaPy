@@ -38,6 +38,7 @@
 #include "NtType.h"
 
 #include "Channel.h"
+#include "RpcClient.h"
 #include "PvaException.h"
 #include "PvaExceptionTranslator.h"
 
@@ -1283,5 +1284,21 @@ BOOST_PYTHON_MODULE(easypva)
              "::\n\n"
              "    channel.setTimeout(10.0)\n\n")
         ;
+
+        // RPC Client
+         class_<RpcClient>("RpcClient", "RpcClient is a client class for PVA RPC services.\n\n"
+             "**RpcClient(channelName)**\n\n"
+             "\t:Parameter: *channelName* (str) - RPC service channel name\n\n"
+             "\tThis example creates RPC client for channel 'createNtTable':\n\n"
+             "\t::\n\n"
+             "\t\trpcClient = RpcClient('createNtTable')\n\n",
+             init<std::string>())
+        .def("invoke", &RpcClient::invoke, return_value_policy<manage_new_object>(), args("pvRequest"),
+             "Invokes RPC call against service registered on the PV specified channel.\n\n"
+             ":Parameter: *pvRequest* (PvObject) - PV request object with a structure conforming to requirements"
+             " of the RPC service registered on the given PV channel\n\n"
+             ":Returns: PV response object\n\n")
+        ;
+
 
 }
