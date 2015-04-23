@@ -4,6 +4,8 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 /**
  * Rpc timeout error.
  */
@@ -14,4 +16,5 @@ public:
     RpcTimeout(const char* message, ...);
 };
 
+}}
 #endif 

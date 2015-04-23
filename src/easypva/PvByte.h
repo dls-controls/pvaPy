@@ -4,17 +4,20 @@
 #include "pv/pvData.h"
 #include "PvScalar.h"
 
+namespace epics { namespace pvaPy {
+
 class PvByte : public PvScalar
 {
 public:
     PvByte();
-    PvByte(char i);
+    PvByte(epics::pvData::int8 i);
     virtual ~PvByte();
 
-    void set(char i);
-    char get() const;
+    void set(epics::pvData::int8 i);
+    epics::pvData::int8 get() const;
 private:
     static boost::python::dict createStructureDict();
 };
 
+}}
 #endif

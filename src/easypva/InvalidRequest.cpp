@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "InvalidRequest.h"
 
+namespace epics { namespace pvaPy {
+
+
 InvalidRequest::InvalidRequest(const std::string& message) :
     PvaException(message)
 {
@@ -17,3 +20,4 @@ InvalidRequest::InvalidRequest(const char* message, ...) :
     va_end(messageArgs);
 }
 
+}}

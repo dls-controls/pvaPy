@@ -1,8 +1,8 @@
 #include "PvProvider.h"
 #include "InvalidArgument.h"
 
-namespace PvProvider
-{
+
+namespace epics { namespace pvaPy { namespace PvProvider {
 
 const char* PvaProviderName("pva");
 const char* CaProviderName("ca");
@@ -29,5 +29,5 @@ std::string getProviderName(ProviderType providerType)
     }
 }
 
-}
+}}}
 

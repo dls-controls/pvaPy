@@ -1,6 +1,9 @@
 #include "PvaClient.h"
 #include "pv/clientFactory.h"
 
+namespace epics { namespace pvaPy {
+
+
 PvaClient::ClientFactoryController PvaClient::clientFactoryController;
 
 PvaClient::ClientFactoryController::ClientFactoryController() 
@@ -20,5 +23,7 @@ PvaClient::PvaClient()
 PvaClient::~PvaClient()
 {
 }
+
+}}
 
 

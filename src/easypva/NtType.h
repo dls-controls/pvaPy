@@ -4,6 +4,8 @@
 #include "boost/python/dict.hpp"
 #include "PvObject.h"
 
+namespace epics { namespace pvaPy {
+
 class NtType : public PvObject
 {
 public:
@@ -18,4 +20,5 @@ protected:
     NtType(const epics::pvData::PVStructurePtr& pvStructurePtr);
 };
 
+}}
 #endif

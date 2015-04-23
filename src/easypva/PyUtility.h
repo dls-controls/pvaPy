@@ -11,8 +11,8 @@
 #include "InvalidDataType.h"
 #include "FieldNotFound.h"
 
-namespace PyUtility
-{
+namespace epics { namespace pvaPy { namespace PyUtility {
+
 
 template<typename PyType>
 PyType extractValueFromPyObject(const boost::python::object& pyObject)
@@ -37,7 +37,7 @@ PyType extractKeyValueFromPyDict(const std::string& key, const boost::python::di
 
 std::string extractStringFromPyObject(const boost::python::object& pyObject);
 
-} // namespace PyUtility
+}}}
 
 #endif 
 

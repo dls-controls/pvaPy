@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "RpcTimeout.h"
 
+namespace epics { namespace pvaPy {
+
+
 RpcTimeout::RpcTimeout(const std::string& message) :
     PvaException(message)
 {
@@ -16,4 +19,6 @@ RpcTimeout::RpcTimeout(const char* message, ...) :
     setMessage(std::string(messageBuffer));
     va_end(messageArgs);
 }
+
+}}
 

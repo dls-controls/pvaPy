@@ -1,6 +1,8 @@
 #ifndef PVA_CLIENT_H
 #define PVA_CLIENT_H
 
+namespace epics { namespace pvaPy {
+
 /**
  * PV access client.
  */
@@ -20,4 +22,5 @@ private:
     static ClientFactoryController clientFactoryController;
 };
 
+}}
 #endif

@@ -4,6 +4,8 @@
 #include "boost/python/dict.hpp"
 #include "PvObject.h"
 
+namespace epics { namespace pvaPy {
+
 class PvAlarm : public PvObject
 {
 public:
@@ -35,4 +37,5 @@ public:
 };
 
 
+}}
 #endif

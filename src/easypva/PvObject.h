@@ -6,6 +6,8 @@
 #include "boost/python/dict.hpp"
 #include "boost/python/list.hpp"
 
+namespace epics { namespace pvaPy {
+
 class PvObject
 {
 public:
@@ -42,44 +44,44 @@ public:
     bool getBoolean(const std::string& key=ValueFieldKey) const;
 
     // Byte fields
-    void setByte(const std::string& key, char value);
-    void setByte(char value);
-    char getByte(const std::string& key=ValueFieldKey) const;
+    void setByte(const std::string& key, epics::pvData::int8 value);
+    void setByte(epics::pvData::int8 value);
+    epics::pvData::int8 getByte(const std::string& key=ValueFieldKey) const;
 
     // UByte fields
-    void setUByte(const std::string& key, unsigned char value);
-    void setUByte(unsigned char value);
-    unsigned char getUByte(const std::string& key=ValueFieldKey) const;
+    void setUByte(const std::string& key, epics::pvData::uint8 value);
+    void setUByte(epics::pvData::uint8 value);
+    epics::pvData::uint8 getUByte(const std::string& key=ValueFieldKey) const;
 
     // Short fields
-    void setShort(const std::string& key, short value);
-    void setShort(short value);
-    short getShort(const std::string& key=ValueFieldKey) const;
+    void setShort(const std::string& key, epics::pvData::int16 value);
+    void setShort(epics::pvData::int16 value);
+    epics::pvData::int16 getShort(const std::string& key=ValueFieldKey) const;
 
     // UShort fields
-    void setUShort(const std::string& key, unsigned short value);
-    void setUShort(unsigned short value);
-    unsigned short getUShort(const std::string& key=ValueFieldKey) const;
+    void setUShort(const std::string& key, epics::pvData::uint16 value);
+    void setUShort(epics::pvData::uint16 value);
+    epics::pvData::uint16 getUShort(const std::string& key=ValueFieldKey) const;
 
     // Int fields
-    void setInt(const std::string& key, int value);
-    void setInt(int value);
-    int getInt(const std::string& key=ValueFieldKey) const;
+    void setInt(const std::string& key, epics::pvData::int32 value);
+    void setInt(epics::pvData::int32 value);
+    epics::pvData::int32 getInt(const std::string& key=ValueFieldKey) const;
 
     // UInt fields
-    void setUInt(const std::string& key, unsigned int value);
-    void setUInt(unsigned int value);
-    unsigned int getUInt(const std::string& key=ValueFieldKey) const;
+    void setUInt(const std::string& key, epics::pvData::uint32 value);
+    void setUInt(epics::pvData::uint32 value);
+    epics::pvData::uint32 getUInt(const std::string& key=ValueFieldKey) const;
 
     // Long fields
-    void setLong(const std::string& key, long long value);
-    void setLong(long long value);
-    long long getLong(const std::string& key=ValueFieldKey) const;
+    void setLong(const std::string& key, epics::pvData::int64 value);
+    void setLong(epics::pvData::int64 value);
+    epics::pvData::int64 getLong(const std::string& key=ValueFieldKey) const;
 
     // ULong fields
-    void setULong(const std::string& key, unsigned long long value);
-    void setULong(unsigned long long value);
-    unsigned long long getULong(const std::string& key=ValueFieldKey) const;
+    void setULong(const std::string& key, epics::pvData::uint64 value);
+    void setULong(epics::pvData::uint64 value);
+    epics::pvData::uint64 getULong(const std::string& key=ValueFieldKey) const;
 
     // Float fields
     void setFloat(const std::string& key, float value);
@@ -149,5 +151,6 @@ private:
 
 };
 
+}}
 #endif
 

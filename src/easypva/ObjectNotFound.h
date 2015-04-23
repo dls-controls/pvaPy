@@ -4,6 +4,8 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 /**
  * Object not found error.
  */
@@ -14,4 +16,5 @@ public:
     ObjectNotFound(const char* message, ...);
 };
 
+}}
 #endif 

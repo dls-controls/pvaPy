@@ -6,6 +6,9 @@
 #include "PyPvDataUtility.h"
 #include "StringUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 PvScalar::PvScalar(const boost::python::dict& pyDict)
     : PvObject(pyDict)
 {
@@ -233,3 +236,5 @@ PvScalar& PvScalar::add(int i)
     }
     return *this;
 }
+
+}}

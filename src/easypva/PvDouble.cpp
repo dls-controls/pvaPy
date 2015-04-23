@@ -2,6 +2,9 @@
 #include "PvType.h"
 #include "PyUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 boost::python::dict PvDouble::createStructureDict()
 {
     boost::python::dict pyDict;
@@ -34,5 +37,7 @@ double PvDouble::get() const
 {
     return pvStructurePtr->getDoubleField(ValueFieldKey)->get();
 }
+
+}}
 
 

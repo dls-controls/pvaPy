@@ -4,6 +4,9 @@
 #include "boost/python/dict.hpp"
 #include "PvObject.h"
 
+namespace epics { namespace pvaPy {
+
+
 class PvScalar : public PvObject
 {
 public:
@@ -20,4 +23,5 @@ protected:
     PvScalar(const boost::python::dict& pyDict);
 };
 
+}}
 #endif

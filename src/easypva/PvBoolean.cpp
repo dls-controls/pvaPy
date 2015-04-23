@@ -2,6 +2,9 @@
 #include "PvType.h"
 #include "PyUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 boost::python::dict PvBoolean::createStructureDict()
 {
     boost::python::dict pyDict;
@@ -36,3 +39,5 @@ bool PvBoolean::get() const
 }
 
 
+
+}}

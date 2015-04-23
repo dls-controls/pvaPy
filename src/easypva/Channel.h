@@ -12,6 +12,8 @@
 #include "PvObject.h"
 #include "PvaPyLogger.h"
 
+namespace epics { namespace pvaPy {
+
 class Channel
 {
 public:
@@ -20,55 +22,55 @@ public:
     static const double DefaultTimeout;
         
     Channel(const std::string& channelName, const std::string& providerName = "pva");
-    virtual ~Channel();
+    ~Channel();
 
     std::string getName() const;
-    virtual PvObject* get(const std::string& requestDescriptor);
-    virtual PvObject* get();
-    virtual void put(const PvObject& pvObject, const std::string& requestDescriptor);
-    virtual void put(const PvObject& pvObject);
-    virtual void put(
-        const epics::pvData::shared_vector<const std::string>& values,
-        const std::string& requestDescriptor);
-    virtual void put(const epics::pvData::shared_vector<const std::string>& values);
-    virtual void put(const std::string& value, const std::string& requestDescriptor);
-    virtual void put(const std::string& value);
-    virtual void put(const boost::python::list& pyList, const std::string& requestDescriptor);
-    virtual void put(const boost::python::list& pyList);
+    PvObject* get(const std::string& requestDescriptor);
+    PvObject* get();
+    void put(const PvObject& pvObject, const std::string& requestDescriptor);
+    void put(const PvObject& pvObject);
+    void put(const boost::python::list& pyList, const std::string& requestDescriptor);
+    void put(const boost::python::list& pyList);
 
-    virtual void put(bool value, const std::string& requestDescriptor);
-    virtual void put(bool value);
-    virtual void put(char value, const std::string& requestDescriptor);
-    virtual void put(char value);
-    virtual void put(unsigned char value, const std::string& requestDescriptor);
-    virtual void put(unsigned char value);
-    virtual void put(short value, const std::string& requestDescriptor);
-    virtual void put(short value);
-    virtual void put(unsigned short value, const std::string& requestDescriptor);
-    virtual void put(unsigned short value);
-    virtual void put(int value, const std::string& requestDescriptor);
-    virtual void put(int value);
-    virtual void put(unsigned int value, const std::string& requestDescriptor);
-    virtual void put(unsigned int value);
-    virtual void put(long long value, const std::string& requestDescriptor);
-    virtual void put(long long value);
-    virtual void put(unsigned long long value, const std::string& requestDescriptor);
-    virtual void put(unsigned long long value);
-    virtual void put(float value, const std::string& requestDescriptor);
-    virtual void put(float value);
-    virtual void put(double value, const std::string& requestDescriptor);
-    virtual void put(double value);
+    void putString(const std::string& value, const std::string& requestDescriptor);
+    void putString(const std::string& value);
+    void putBoolean(bool value, const std::string& requestDescriptor);
+    void putBoolean(bool value);
+    void putByte(epics::pvData::int8 value, const std::string& requestDescriptor);
+    void putByte(epics::pvData::int8 value);
+    void putUByte(epics::pvData::uint8 value, const std::string& requestDescriptor);
+    void putUByte(epics::pvData::uint8 value);
+    void putShort(epics::pvData::int16 value, const std::string& requestDescriptor);
+    void putShort(epics::pvData::int16 value);
+    void putUShort(epics::pvData::uint16 value, const std::string& requestDescriptor);
+    void putUShort(epics::pvData::uint16 value);
+    void putInt(epics::pvData::int32 value, const std::string& requestDescriptor);
+    void putInt(epics::pvData::int32 value);
+    void putUInt(epics::pvData::uint32 value, const std::string& requestDescriptor);
+    void putUInt(epics::pvData::uint32 value);
+    void putLong(epics::pvData::int64 value, const std::string& requestDescriptor);
+    void putLong(epics::pvData::int64 value);
+    void putULong(epics::pvData::uint64 value, const std::string& requestDescriptor);
+    void putULong(epics::pvData::uint64 value);
+    void putFloat(float value, const std::string& requestDescriptor);
+    void putFloat(float value);
+    void putDouble(double value, const std::string& requestDescriptor);
+    void putDouble(double value);
 
-    virtual void setTimeout(double timeout);
-    virtual double getTimeout() const;
-    epics::easyPVA::EasyChannelPtr getEasyChannel();
-    epics::easyPVA::EasyPVAPtr getEasyPVA();
+    void setTimeout(double timeout);
+    double getTimeout() const;
+    epics::easyPVA::EasyChannelPtr getEasyChannel() const;
+    static epics::easyPVA::EasyPVAPtr getEasyPVA() ;
 
 private:
+    void put(
+        const std::vector<std::string>& values,
+        const std::string& requestDescriptor);
+    void put(const std::vector<std::string>& values);
     static PvaPyLogger logger;
     static epics::easyPVA::EasyPVAPtr easyPVA;
+    epics::easyPVA::EasyChannelPtr  easyChannel;
 
-    epics::easyPVA::EasyChannelPtr easyChannel;
     double timeout;
 };
 
@@ -87,4 +89,15 @@ inline double Channel::getTimeout() const
     return timeout;
 }
 
+inline epics::easyPVA::EasyChannelPtr Channel::getEasyChannel() const
+{
+    return easyChannel;
+}
+
+inline epics::easyPVA::EasyPVAPtr Channel::getEasyPVA() 
+{
+    return easyPVA;
+}
+
+}}
 #endif

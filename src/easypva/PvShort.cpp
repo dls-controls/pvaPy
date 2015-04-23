@@ -2,6 +2,9 @@
 #include "PvType.h"
 #include "PyUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 boost::python::dict PvShort::createStructureDict()
 {
     boost::python::dict pyDict;
@@ -15,7 +18,7 @@ PvShort::PvShort()
     set(0);
 }
 
-PvShort::PvShort(short s)
+PvShort::PvShort(epics::pvData::int16 s)
     : PvScalar(createStructureDict())
 {
     set(s);
@@ -25,14 +28,16 @@ PvShort::~PvShort()
 {
 }
 
-void PvShort::set(short s) 
+void PvShort::set(epics::pvData::int16 s) 
 {
     pvStructurePtr->getShortField(ValueFieldKey)->put(s);
 }
 
-short PvShort::get() const 
+epics::pvData::int16 PvShort::get() const 
 {
     return pvStructurePtr->getShortField(ValueFieldKey)->get();
 }
+
+}}
 
 

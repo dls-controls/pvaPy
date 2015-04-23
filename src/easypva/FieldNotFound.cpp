@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "FieldNotFound.h"
 
+
+namespace epics { namespace pvaPy {
+
 FieldNotFound::FieldNotFound(const std::string& message) :
     PvaException(message)
 {
@@ -17,3 +20,4 @@ FieldNotFound::FieldNotFound(const char* message, ...) :
     va_end(messageArgs);
 }
 
+}}

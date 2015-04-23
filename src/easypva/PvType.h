@@ -3,8 +3,7 @@
 
 #include "pv/pvIntrospect.h"
 
-namespace PvType
-{
+namespace epics { namespace pvaPy { namespace PvType {
 
 enum ScalarType {
     Boolean = epics::pvData::pvBoolean,
@@ -21,7 +20,7 @@ enum ScalarType {
     String = epics::pvData::pvString,
 };
 
-}
+}}}
 
 #endif
 

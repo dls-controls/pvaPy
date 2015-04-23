@@ -8,6 +8,9 @@
 #include "pv/event.h" // this should really be in pv/rpcClient.h
 #include "pv/rpcClient.h"
 
+
+namespace epics { namespace pvaPy {
+
 /**
  * RPC client for PV access.
  */
@@ -39,4 +42,5 @@ inline std::string RpcClient::getChannelName() const
     return channelName;
 }
 
+}}
 #endif

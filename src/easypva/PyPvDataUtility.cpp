@@ -4,14 +4,13 @@
 #include "InvalidDataType.h"
 #include <pv/pvAccess.h>
 
+namespace epics { namespace pvaPy { namespace PyPvDataUtility {
+
+
 using std::tr1::static_pointer_cast;
 using namespace epics::pvData;
 using namespace epics::pvAccess;
 using namespace std;
-
-// Scalar array utilities
-namespace PyPvDataUtility
-{
 
 //
 // Checks
@@ -251,49 +250,49 @@ void pyObjectToScalarField(const boost::python::object& pyObject, const std::str
         }
         case pvByte: {
             PVBytePtr fieldPtr = pvStructurePtr->getByteField(fieldName);
-            char value = PyUtility::extractValueFromPyObject<char>(pyObject);
+            int8 value = PyUtility::extractValueFromPyObject<int8>(pyObject);
             fieldPtr->put(static_cast<int8>(value));
             break;
         }
         case pvUByte: {
             PVUBytePtr fieldPtr = pvStructurePtr->getUByteField(fieldName);
-            unsigned char value = PyUtility::extractValueFromPyObject<unsigned char>(pyObject);
+            uint8 value = PyUtility::extractValueFromPyObject<uint8>(pyObject);
             fieldPtr->put(static_cast<uint8>(value));
             break;
         }
         case pvShort: {
             PVShortPtr fieldPtr = pvStructurePtr->getShortField(fieldName);
-            short value = PyUtility::extractValueFromPyObject<short>(pyObject);
+            int16 value = PyUtility::extractValueFromPyObject<int16>(pyObject);
             fieldPtr->put(static_cast<int16>(value));
             break;
         }
         case pvUShort: {
             PVUShortPtr fieldPtr = pvStructurePtr->getUShortField(fieldName);
-            unsigned short value = PyUtility::extractValueFromPyObject<unsigned short>(pyObject);
+            uint16 value = PyUtility::extractValueFromPyObject<uint16>(pyObject);
             fieldPtr->put(static_cast<uint16>(value));
             break;
         }
         case pvInt: {
             PVIntPtr fieldPtr = pvStructurePtr->getIntField(fieldName);
-            int value = PyUtility::extractValueFromPyObject<int>(pyObject);
+            int32 value = PyUtility::extractValueFromPyObject<int32>(pyObject);
             fieldPtr->put(static_cast<int32>(value));
             break;
         }
         case pvUInt: {
             PVUIntPtr fieldPtr = pvStructurePtr->getUIntField(fieldName);
-            unsigned int value = PyUtility::extractValueFromPyObject<unsigned int>(pyObject);
+            uint32 value = PyUtility::extractValueFromPyObject<uint32>(pyObject);
             fieldPtr->put(static_cast<uint32>(value));
             break;
         }
         case pvLong: {
             PVLongPtr fieldPtr = pvStructurePtr->getLongField(fieldName);
-            long long value = PyUtility::extractValueFromPyObject<long long>(pyObject);
+            int64 value = PyUtility::extractValueFromPyObject<int64>(pyObject);
             fieldPtr->put(static_cast<int64>(value));
             break;
         }
         case pvULong: {
             PVULongPtr fieldPtr = pvStructurePtr->getULongField(fieldName);
-            unsigned long long value = PyUtility::extractValueFromPyObject<unsigned long long>(pyObject);
+            uint64 value = PyUtility::extractValueFromPyObject<uint64>(pyObject);
             fieldPtr->put(static_cast<uint64>(value));
             break;
         }
@@ -440,35 +439,35 @@ void pyListToScalarArrayField(const boost::python::list& pyList, const std::stri
             break;
         }
         case pvByte: {
-            pyListToScalarArrayField<PVByteArray, int8, char>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVByteArray, int8, int8>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvUByte: {
-            pyListToScalarArrayField<PVUByteArray, uint8, unsigned char>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVUByteArray, uint8, uint8>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvShort: {
-            pyListToScalarArrayField<PVShortArray, int16, short>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVShortArray, int16, int16>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvUShort: {
-            pyListToScalarArrayField<PVUShortArray, uint16, unsigned short>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVUShortArray, uint16, uint16>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvInt: {
-            pyListToScalarArrayField<PVIntArray, int32, int>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVIntArray, int32, int32>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvUInt: {
-            pyListToScalarArrayField<PVUIntArray, uint32, unsigned int>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVUIntArray, uint32, uint32>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvLong: {
-            pyListToScalarArrayField<PVLongArray, int64, long long>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVLongArray, int64, int64>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvULong: {
-            pyListToScalarArrayField<PVULongArray, uint64, unsigned long long>(pyList, fieldName, scalarType, pvStructurePtr);
+            pyListToScalarArrayField<PVULongArray, uint64, uint64>(pyList, fieldName, scalarType, pvStructurePtr);
             break;
         }
         case pvFloat: {
@@ -611,7 +610,7 @@ void structureToPyDict(const PVStructurePtr& pvStructurePtr, boost::python::dict
 {
     StructureConstPtr structurePtr = pvStructurePtr->getStructure();
     StringArray fieldNames = structurePtr->getFieldNames();
-    for (unsigned int i = 0; i < fieldNames.size(); ++i) {
+    for (size_t i = 0; i < fieldNames.size(); ++i) {
         std::string fieldName = fieldNames[i];
         FieldConstPtr fieldPtr = getField(fieldName, pvStructurePtr);
         Type type = fieldPtr->getType();
@@ -668,42 +667,42 @@ void addScalarFieldToDict(const std::string& fieldName, ScalarType scalarType, c
             break;
         }
         case pvByte: {
-            char value = getByteField(fieldName, pvStructurePtr)->get();
+            int8 value = getByteField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvUByte: {
-            unsigned char value = getUByteField(fieldName, pvStructurePtr)->get();
+            uint8 value = getUByteField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvShort: {
-            short value = getShortField(fieldName, pvStructurePtr)->get();
+            int16 value = getShortField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvUShort: {
-            ushort value = getUShortField(fieldName, pvStructurePtr)->get();
+            uint16 value = getUShortField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvInt: {
-            int32_t value = getIntField(fieldName, pvStructurePtr)->get();
+            int32 value = getIntField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvUInt: {
-            uint32_t value = getUIntField(fieldName, pvStructurePtr)->get();
+            uint32 value = getUIntField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvLong: {
-            int64_t value = getLongField(fieldName, pvStructurePtr)->get();
+            int64 value = getLongField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
         case pvULong: {
-            uint64_t value = getULongField(fieldName, pvStructurePtr)->get();
+            uint64 value = getULongField(fieldName, pvStructurePtr)->get();
             pyDict[fieldName] = value;
             break;
         }
@@ -789,7 +788,7 @@ void addUnionArrayFieldToDict(const std::string& fieldName, const PVStructurePtr
 void structureToPyDict(const StructureConstPtr& structurePtr, boost::python::dict& pyDict)
 {
     StringArray fieldNames = structurePtr->getFieldNames();
-    for (unsigned int i = 0; i < fieldNames.size(); ++i) {
+    for (size_t i = 0; i < fieldNames.size(); ++i) {
         std::string fieldName = fieldNames[i];
         FieldConstPtr fieldPtr = structurePtr->getField(fieldName);
         Type type = fieldPtr->getType();
@@ -843,7 +842,7 @@ void copyStructureToStructure(const PVStructurePtr& srcPvStructurePtr, PVStructu
 {
     StructureConstPtr srcStructurePtr = srcPvStructurePtr->getStructure();
     StringArray fieldNames = srcStructurePtr->getFieldNames();
-    for (unsigned int i = 0; i < fieldNames.size(); ++i) {
+    for (size_t i = 0; i < fieldNames.size(); ++i) {
         std::string fieldName = fieldNames[i];
         PVFieldPtr pvFieldPtr = srcPvStructurePtr->getSubField(fieldName);
         FieldConstPtr fieldPtr = pvFieldPtr->getField();
@@ -1095,6 +1094,6 @@ void copyScalarArrayToStructure(const std::string& fieldName, ScalarType scalarT
     }
 }
     
-} // namespace PyPvDataUtility
+}}}
 
 

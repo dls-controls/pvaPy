@@ -1,5 +1,8 @@
 #include "NtType.h"
 
+namespace epics { namespace pvaPy {
+
+
 const char* NtType::StructureId("epics:nt/NTType:1.0");
 
 NtType::NtType(const boost::python::dict& pyDict, const std::string& structureId)
@@ -20,4 +23,6 @@ NtType::NtType(const epics::pvData::PVStructurePtr& pvStructurePtr)
 NtType::~NtType()
 {
 }
+
+}}
 

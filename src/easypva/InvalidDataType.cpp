@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "InvalidDataType.h"
 
+
+namespace epics { namespace pvaPy {
+
 InvalidDataType::InvalidDataType(const std::string& message) :
     PvaException(message)
 {
@@ -17,3 +20,4 @@ InvalidDataType::InvalidDataType(const char* message, ...) :
     va_end(messageArgs);
 }
 
+}}

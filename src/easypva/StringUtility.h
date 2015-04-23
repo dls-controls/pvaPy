@@ -4,8 +4,7 @@
 #include <string>
 #include <sstream>
 
-namespace StringUtility 
-{
+namespace epics { namespace pvaPy { namespace StringUtility {
 
 template<typename T>
 std::string toString(const T& t);
@@ -28,7 +27,7 @@ std::string toString(const T& t)
     return result.str();
 }
 
-}
+}}}
 
 #endif 
 

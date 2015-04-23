@@ -1,6 +1,9 @@
 #include "PvScalarArray.h"
 #include "PyPvDataUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 boost::python::dict PvScalarArray::createStructureDict(PvType::ScalarType scalarType)
 {
     boost::python::list pyList;
@@ -45,4 +48,6 @@ boost::python::list PvScalarArray::get() const
 {
     return toList();
 }
+
+}}
 

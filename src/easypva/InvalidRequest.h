@@ -4,6 +4,8 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 /**
  * Invalid request error.
  */
@@ -14,4 +16,5 @@ public:
     InvalidRequest(const char* message, ...);
 };
 
+}}
 #endif 

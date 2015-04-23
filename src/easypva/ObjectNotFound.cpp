@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "ObjectNotFound.h"
 
+namespace epics { namespace pvaPy {
+
+
 ObjectNotFound::ObjectNotFound(const std::string& message) :
     PvaException(message)
 {
@@ -16,4 +19,6 @@ ObjectNotFound::ObjectNotFound(const char* message, ...) :
     setMessage(std::string(messageBuffer));
     va_end(messageArgs);
 }
+
+}}
 

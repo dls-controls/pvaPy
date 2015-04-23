@@ -7,6 +7,8 @@
 #include "pv/logger.h"
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 const char* Channel::DefaultRequestDescriptor("field(value)");
 const double Channel::DefaultTimeout(5.0);
 
@@ -29,7 +31,7 @@ Channel::Channel(const std::string& channelName, const string & providerName)
        easyChannel->connect(timeout);
     } catch (std::runtime_error e) {
         string message("channel ");
-        message += channelName + " did not connect";
+        message += channelName + " did not connect " + e.what();
         throw PvaException(message);
     }
 }
@@ -39,7 +41,7 @@ Channel::~Channel()
 {
     easyChannel.reset();
 }
- 
+
 PvObject* Channel::get()
 {
     return get(DefaultRequestDescriptor);
@@ -78,12 +80,12 @@ void Channel::put(const PvObject& pvObject, const std::string& requestDescriptor
     }
 }
 
-void Channel::put(const shared_vector<const std::string>& values)
+void Channel::put(const std::vector<std::string>& values)
 {
     put(values, DefaultRequestDescriptor);
 }
 
-void Channel::put(const shared_vector<const std::string>& value, const std::string& requestDescriptor) 
+void Channel::put(const std::vector<std::string>& value, const std::string& requestDescriptor)
 {
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
@@ -97,13 +99,14 @@ void Channel::put(const shared_vector<const std::string>& value, const std::stri
     }
 }
 
-void Channel::put(const std::string& value)
+void Channel::putString(const std::string& value)
 {
-    put(value, DefaultRequestDescriptor);
+    putString(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(const std::string& value, const std::string& requestDescriptor) 
+void Channel::putString(const std::string& value, const std::string& requestDescriptor) 
 {
+//cout << "Channel::put(const std::string& value " << "value " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -119,11 +122,11 @@ void Channel::put(const std::string& value, const std::string& requestDescriptor
 void Channel::put(const boost::python::list& pyList, const std::string& requestDescriptor) 
 {
     int listSize = boost::python::len(pyList);
-    shared_vector<std::string> values(listSize);
+    std::vector<std::string> values(listSize);
     for (int i = 0; i < listSize; i++) {
         values[i] = PyUtility::extractStringFromPyObject(pyList[i]);
     }
-    put(freeze(values), requestDescriptor);
+    put(values, requestDescriptor);
 }
 
 void Channel::put(const boost::python::list& pyList)
@@ -131,11 +134,12 @@ void Channel::put(const boost::python::list& pyList)
     put(pyList, DefaultRequestDescriptor);
 }
 
-void Channel::put(bool value, const std::string& requestDescriptor)
+void Channel::putBoolean(bool value, const std::string& requestDescriptor)
 {
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVBooleanPtr pv = easyPut->getData()->getPVStructure()->getSubField<PVBoolean>("value");
+        pv->put(value);
         if(!pv) throw std::runtime_error("value is not boolean");
         easyPut->put();
     } catch (std::runtime_error e) {
@@ -145,13 +149,16 @@ void Channel::put(bool value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(bool value)
+void Channel::putBoolean(bool value)
 {
-    put(value, DefaultRequestDescriptor);
+    putBoolean(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(char value, const std::string& requestDescriptor)
+void Channel::putByte(epics::pvData::int8 value, const std::string& requestDescriptor)
 {
+//int8 temp = value;
+//temp += 1;
+//cout << "Channel::put(int8 value "  << "value = " << value << " temp " << temp << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -164,14 +171,14 @@ void Channel::put(char value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(char value)
+void Channel::putByte(epics::pvData::int8 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putByte(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(unsigned char value, const std::string& requestDescriptor)
+void Channel::putUByte(uint8 value, const std::string& requestDescriptor)
 {
-    put(StringUtility::toString<int>(static_cast<int>(value)), requestDescriptor);
+//cout << "Channel::put(uint8 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -184,13 +191,14 @@ void Channel::put(unsigned char value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(unsigned char value)
+void Channel::putUByte(uint8 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putUByte(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(short value, const std::string& requestDescriptor)
+void Channel::putShort(int16 value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(int16 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -203,14 +211,14 @@ void Channel::put(short value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(short value)
+void Channel::putShort(int16 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putShort(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(unsigned short value, const std::string& requestDescriptor)
+void Channel::putUShort(uint16 value, const std::string& requestDescriptor)
 {
-    put(StringUtility::toString<int>(static_cast<int>(value)), requestDescriptor);
+//cout << "Channel::put(uint16 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -223,13 +231,14 @@ void Channel::put(unsigned short value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(unsigned short value)
+void Channel::putUShort(uint16 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putUShort(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(int value, const std::string& requestDescriptor)
+void Channel::putInt(int32 value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(int32 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -242,13 +251,14 @@ void Channel::put(int value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(int value)
+void Channel::putInt(int32 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putInt(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(unsigned int value, const std::string& requestDescriptor)
+void Channel::putUInt(uint32 value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(uint32 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -261,13 +271,14 @@ void Channel::put(unsigned int value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(unsigned int value)
+void Channel::putUInt(uint32 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putUInt(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(long long value, const std::string& requestDescriptor)
+void Channel::putLong(int64 value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(int64 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -280,13 +291,14 @@ void Channel::put(long long value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(long long value)
+void Channel::putLong(int64 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putLong(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(unsigned long long value, const std::string& requestDescriptor)
+void Channel::putULong(uint64 value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(uint64 value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -299,13 +311,14 @@ void Channel::put(unsigned long long value, const std::string& requestDescriptor
     }
 }
 
-void Channel::put(unsigned long long value)
+void Channel::putULong(uint64 value)
 {
-    put(value, DefaultRequestDescriptor);
+    putULong(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(float value, const std::string& requestDescriptor)
+void Channel::putFloat(float value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(float value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -318,13 +331,14 @@ void Channel::put(float value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(float value)
+void Channel::putFloat(float value)
 {
-    put(value, DefaultRequestDescriptor);
+    putFloat(value, DefaultRequestDescriptor);
 }
 
-void Channel::put(double value, const std::string& requestDescriptor)
+void Channel::putDouble(double value, const std::string& requestDescriptor)
 {
+//cout << "Channel::put(double value "  << "value = " << value << endl;
     try {
         EasyPutPtr easyPut = easyChannel->put(requestDescriptor);
         PVScalarPtr pvScalar = easyPut->getData()->getScalarValue();
@@ -337,8 +351,9 @@ void Channel::put(double value, const std::string& requestDescriptor)
     }
 }
 
-void Channel::put(double value)
+void Channel::putDouble(double value)
 {
-    put(value, DefaultRequestDescriptor);
+    putDouble(value, DefaultRequestDescriptor);
 }
 
+}}

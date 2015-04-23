@@ -4,6 +4,8 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 /**
  * Invalid state error.
  */
@@ -14,4 +16,5 @@ public:
     InvalidState(const char* message, ...);
 };
 
+}}
 #endif 

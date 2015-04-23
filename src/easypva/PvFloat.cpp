@@ -2,6 +2,9 @@
 #include "PvType.h"
 #include "PyUtility.h"
 
+namespace epics { namespace pvaPy {
+
+
 boost::python::dict PvFloat::createStructureDict()
 {
     boost::python::dict pyDict;
@@ -34,5 +37,7 @@ float PvFloat::get() const
 {
     return pvStructurePtr->getFloatField(ValueFieldKey)->get();
 }
+
+}}
 
 

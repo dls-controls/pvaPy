@@ -6,6 +6,9 @@
 #include "PvObject.h"
 #include "PvType.h"
 
+namespace epics { namespace pvaPy {
+
+
 class PvScalarArray : public PvObject
 {
 public:
@@ -22,4 +25,5 @@ private:
     static boost::python::dict createStructureDict(PvType::ScalarType scalarType);
 };
 
+}}
 #endif

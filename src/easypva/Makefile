@@ -18,8 +18,8 @@ CXXFLAGS += -g  -I$(BOOST_DIR)/include $(PVA_PY_CPPFLAGS)
 LDFLAGS += $(PVA_PY_LDFLAGS)
 
 
-easypva_SRCS += easypva.cpp
 easypva_SRCS += Channel.cpp
+easypva_SRCS += PVAPYMonitor.cpp
 easypva_SRCS += ChannelTimeout.cpp
 easypva_SRCS += FieldNotFound.cpp
 easypva_SRCS += InvalidArgument.cpp
@@ -53,10 +53,10 @@ easypva_SRCS += PvUShort.cpp
 easypva_SRCS += PvUtility.cpp
 easypva_SRCS += PyPvDataUtility.cpp
 easypva_SRCS += PyUtility.cpp
-easypva_SRCS += PyGilManager.cpp
 easypva_SRCS += RpcClient.cpp
 easypva_SRCS += RpcTimeout.cpp
 easypva_SRCS += StringUtility.cpp
+easypva_SRCS += easypva.cpp
 
 easypva_LIBS += pvData
 easypva_LIBS += pvAccess

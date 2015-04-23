@@ -6,6 +6,9 @@
 #include "errlog.h"
 #include "PvaPyLogger.h"
 
+namespace epics { namespace pvaPy {
+
+
 // Constants.
 const char* PvaPyLogger::LogLevelCritical("CRITICAL");
 const char* PvaPyLogger::LogLevelError("ERROR");
@@ -259,3 +262,5 @@ void PvaPyLogger::prepareTimeStamp(char* timeStamp, int timeStampLength, const c
     epicsTimeToStrftime(timeStamp, timeStampLength, timeStampFormat, &now);
 }
 
+
+}}

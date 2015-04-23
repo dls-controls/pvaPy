@@ -1,7 +1,6 @@
 #include "PyUtility.h"
 
-namespace PyUtility
-{
+namespace epics { namespace pvaPy { namespace PyUtility {
 
 std::string extractStringFromPyObject(const boost::python::object& pyObject)
 {
@@ -71,6 +70,6 @@ std::string extractStringFromPyObject(const boost::python::object& pyObject)
 }
 
 
-} // namespace PyUtility
+}}}
 
 

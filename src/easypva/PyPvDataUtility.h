@@ -12,8 +12,8 @@
 #include "PyUtility.h"
 #include "InvalidDataType.h"
 
-namespace PyPvDataUtility
-{
+namespace epics { namespace pvaPy { namespace PyPvDataUtility {
+
 
 //
 // Checks
@@ -248,7 +248,7 @@ void copyScalarArrayToScalarArray(const epics::pvData::PVScalarArrayPtr& srcPvSc
     destPvScalarArrayPtr->putFrom(data);
 }
 
-} // namespace PyPvDataUtility
+}}}
 
 #endif
 

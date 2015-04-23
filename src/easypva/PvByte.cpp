@@ -2,6 +2,11 @@
 #include "PvType.h"
 #include "PyUtility.h"
 
+namespace epics { namespace pvaPy {
+
+using namespace epics::pvData;
+
+
 boost::python::dict PvByte::createStructureDict()
 {
     boost::python::dict pyDict;
@@ -15,7 +20,7 @@ PvByte::PvByte()
     set(0);
 }
 
-PvByte::PvByte(char c)
+PvByte::PvByte(int8 c)
     : PvScalar(createStructureDict())
 {
     set(c);
@@ -25,14 +30,16 @@ PvByte::~PvByte()
 {
 }
 
-void PvByte::set(char c) 
+void PvByte::set(int8 c) 
 {
     pvStructurePtr->getByteField(ValueFieldKey)->put(c);
 }
 
-char PvByte::get() const 
+int8 PvByte::get() const 
 {
     return pvStructurePtr->getByteField(ValueFieldKey)->get();
 }
 
 
+
+}}

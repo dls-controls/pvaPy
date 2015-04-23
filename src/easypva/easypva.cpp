@@ -15,6 +15,7 @@
 #include "boost/operators.hpp"
 
 #include "PvObject.h"
+#include "PVAPYMonitor.h"
 #include "PvProvider.h"
 #include "PvScalar.h"
 #include "PvType.h"
@@ -42,6 +43,10 @@
 #include "PvaException.h"
 #include "PvaExceptionTranslator.h"
 
+using namespace epics::pvData;
+using namespace epics::easyPVA;
+using namespace epics::pvaPy;
+
 // Overload macros
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObjectGetBoolean, PvObject::getBoolean, 0, 1)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObjectGetByte, PvObject::getByte, 0, 1)
@@ -59,7 +64,6 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObjectGetScalarArray, PvObject::getScal
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObjectGetStructure, PvObject::getStructure, 0, 1)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObjectGetStructureArray, PvObject::getStructureArray, 0, 1)
 
-using namespace epics::pvData;
 
 BOOST_PYTHON_MODULE(easypva)
 {
@@ -143,146 +147,146 @@ BOOST_PYTHON_MODULE(easypva)
             "::\n\n"
             "    value = pv.getBoolean('aBoolean')\n\n"))
  
-        .def("setByte", static_cast<void(PvObject::*)(char)>(&PvObject::setByte), args("value"),
+        .def("setByte", static_cast<void(PvObject::*)(int8)>(&PvObject::setByte), args("value"),
             "Sets byte (character) value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (str) - byte value that will be assigned to the field named 'value'\n\n"
             "::\n\n"
             "    pv.setByte('a')\n\n")
 
-        .def("setByte", static_cast<void(PvObject::*)(const std::string&,char)>(&PvObject::setByte), args("name", "value"),
+        .def("setByte", static_cast<void(PvObject::*)(const std::string&,int8)>(&PvObject::setByte), args("name", "value"),
             "Sets byte (character) value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (str) - byte value that will be assigned to the given field\n\n"
             "::\n\n"
             "    pv.setByte('aByte', 'a')\n\n")
 
-        .def("getByte", static_cast<char(PvObject::*)(const std::string&)const>(&PvObject::getByte), PvObjectGetByte(args("name='value'"),
+        .def("getByte", static_cast<int8(PvObject::*)(const std::string&)const>(&PvObject::getByte), PvObjectGetByte(args("name='value'"),
             "Retrieves byte (character) value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: byte stored in the given PV field\n\n"
             "::\n\n"
             "    value = pv.getByte('aByte')\n\n"))
 
-        .def("setUByte", static_cast<void(PvObject::*)(unsigned char)>(&PvObject::setUByte), args("value"),
+        .def("setUByte", static_cast<void(PvObject::*)(uint8)>(&PvObject::setUByte), args("value"),
             "Sets unsigned byte (character) value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (str) - unsigned byte that will be assigned to the field named 'value'\n\n"
             "::\n\n"
             "    pv.setUByte('a')\n\n")
 
-        .def("setUByte", static_cast<void(PvObject::*)(const std::string&,unsigned char)>(&PvObject::setUByte), args("name", "value"),
+        .def("setUByte", static_cast<void(PvObject::*)(const std::string&,uint8)>(&PvObject::setUByte), args("name", "value"),
             "Sets unsigned byte (character) value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (str) - unsigned byte value that will be assigned to the given field\n\n"
             "::\n\n"
             "    pv.setByte('anUByte', 'a')\n\n")
 
-        .def("getUByte", static_cast<unsigned char(PvObject::*)(const std::string&)const>(&PvObject::getUByte), PvObjectGetUByte(args("name='value'"),
+        .def("getUByte", static_cast<uint8(PvObject::*)(const std::string&)const>(&PvObject::getUByte), PvObjectGetUByte(args("name='value'"),
             "Retrieves unsigned byte (character) value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: unsigned byte stored in the given PV field\n\n"
             "::\n\n"
             "    value = pv.getUByte('anUByte')\n\n"))
 
-        .def("setShort", static_cast<void(PvObject::*)(short)>(&PvObject::setShort), args("value"),
+        .def("setShort", static_cast<void(PvObject::*)(int16)>(&PvObject::setShort), args("value"),
             "Sets short value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (int) - short value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setShort(10)\n\n")
 
-        .def("setShort", static_cast<void(PvObject::*)(const std::string&,short)>(&PvObject::setShort), args("name", "value"),
+        .def("setShort", static_cast<void(PvObject::*)(const std::string&,int16)>(&PvObject::setShort), args("name", "value"),
             "Sets short value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (int) - short value that will be assigned to the given field\n\n"
             "::\n\n"
             "    pv.setShort('aShort', 10)\n\n")
 
-        .def("getShort", static_cast<short(PvObject::*)(const std::string&)const>(&PvObject::getShort), PvObjectGetShort(args("name='value'"),
+        .def("getShort", static_cast<int16(PvObject::*)(const std::string&)const>(&PvObject::getShort), PvObjectGetShort(args("name='value'"),
             "Retrieves short value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: short stored in the given PV field\n\n"
             "::\n\n"
             "    value = pv.getShort('aShort')\n\n"))
 
-        .def("setUShort", static_cast<void(PvObject::*)(unsigned short)>(&PvObject::setUShort), args("value"),
+        .def("setUShort", static_cast<void(PvObject::*)(uint16)>(&PvObject::setUShort), args("value"),
             "Sets unsigned short value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (int) - unsigned short value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setUShort(10)\n\n")
 
-        .def("setUShort", static_cast<void(PvObject::*)(const std::string&,unsigned short)>(&PvObject::setUShort), args("name", "value"),
+        .def("setUShort", static_cast<void(PvObject::*)(const std::string&,uint16)>(&PvObject::setUShort), args("name", "value"),
             "Sets unsigned short value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (int) - unsigned short value that will be assigned to the given field\n\n"
             "::\n\n"
             "    pv.setUShort('anUShort', 10)\n\n")
 
-        .def("getUShort", static_cast<unsigned short(PvObject::*)(const std::string&)const>(&PvObject::getUShort), PvObjectGetUShort(args("name='value'"),
+        .def("getUShort", static_cast<uint16(PvObject::*)(const std::string&)const>(&PvObject::getUShort), PvObjectGetUShort(args("name='value'"),
             "Retrieves unsigned short value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n:Returns: unsigned short stored in the given PV field\n\n::\n\n"
             "    value = pv.getUShort('anUShort')\n\n"))
 
-        .def("setInt", static_cast<void(PvObject::*)(int)>(&PvObject::setInt), args("value"),
+        .def("setInt", static_cast<void(PvObject::*)(int32)>(&PvObject::setInt), args("value"),
             "Sets integer value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (int) - integer value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setInt(10)\n\n")
 
-        .def("setInt", static_cast<void(PvObject::*)(const std::string&,int)>(&PvObject::setInt), args("name", "value"),
+        .def("setInt", static_cast<void(PvObject::*)(const std::string&,int32)>(&PvObject::setInt), args("name", "value"),
             "Sets integer value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (int) - integer value that will be assigned to the given field\n\n::\n\n"
             "    pv.setInt('anInt', 10)\n\n")
 
-        .def("getInt", static_cast<int(PvObject::*)(const std::string&)const>(&PvObject::getInt), PvObjectGetInt(args("name='value'"),
+        .def("getInt", static_cast<int32(PvObject::*)(const std::string&)const>(&PvObject::getInt), PvObjectGetInt(args("name='value'"),
             "Retrieves integer value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: integer stored in the given PV field\n\n::\n\n"
             "    value = pv.getInt('anInt')\n\n"))
 
-        .def("setUInt", static_cast<void(PvObject::*)(unsigned int)>(&PvObject::setUInt), args("value"),
+        .def("setUInt", static_cast<void(PvObject::*)(uint32)>(&PvObject::setUInt), args("value"),
             "Sets unsigned integer value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (int) - unsigned integer value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setUInt(10)\n\n")
 
-        .def("setUInt", static_cast<void(PvObject::*)(const std::string&,unsigned int)>(&PvObject::setUInt), args("name", "value"),
+        .def("setUInt", static_cast<void(PvObject::*)(const std::string&,uint32)>(&PvObject::setUInt), args("name", "value"),
             "Sets unsigned integer value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (int) - unsigned integer value that will be assigned to the given field\n\n::\n\n"
             "    pv.setUInt('anInt', 10)\n\n")
 
-        .def("getUInt", static_cast<unsigned int(PvObject::*)(const std::string&)const>(&PvObject::getUInt), PvObjectGetUInt(args("name='value'"),
+        .def("getUInt", static_cast<uint32(PvObject::*)(const std::string&)const>(&PvObject::getUInt), PvObjectGetUInt(args("name='value'"),
              "Retrieves unsigned integer value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: unsigned integer stored in the given PV field\n\n::\n\n"
             "    value = pv.getUInt('anUInt')\n\n"))
 
         .def("setLong", 
-            static_cast<void(PvObject::*)(long long)>(&PvObject::setLong), args("value"),
+            static_cast<void(PvObject::*)(int64)>(&PvObject::setLong), args("value"),
             "Sets long value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (long) - long value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setLong(10L)\n\n")
 
-        .def("setLong", static_cast<void(PvObject::*)(const std::string&,long long)>(&PvObject::setLong), args("name", "value"),
+        .def("setLong", static_cast<void(PvObject::*)(const std::string&,int64)>(&PvObject::setLong), args("name", "value"),
             "Sets long value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (long) - long value that will be assigned to the given field\n\n::\n\n"
             "    pv.setLong('aLong', 10L)\n\n")
 
-        .def("getLong", static_cast<long long(PvObject::*)(const std::string&)const>(&PvObject::getLong), PvObjectGetLong(args("name='value'"),
+        .def("getLong", static_cast<int64(PvObject::*)(const std::string&)const>(&PvObject::getLong), PvObjectGetLong(args("name='value'"),
              "Retrieves long value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: long stored in the given PV field\n\n::\n\n"
             "    value = pv.getLong('aLong')\n\n"))
 
-        .def("setULong", static_cast<void(PvObject::*)(unsigned long long)>(&PvObject::setULong), args("value"),
+        .def("setULong", static_cast<void(PvObject::*)(uint64)>(&PvObject::setULong), args("value"),
             "Sets unsigned long value for the PV field named 'value'.\n\n"
             ":Parameter: *value* (long) - unsigned long value that will be assigned to the field named 'value'\n\n::\n\n"
             "    pv.setULong(10L)\n\n")
 
-        .def("setULong", static_cast<void(PvObject::*)(const std::string&,unsigned long long)>(&PvObject::setULong), args("name", "value"),
+        .def("setULong", static_cast<void(PvObject::*)(const std::string&,uint64)>(&PvObject::setULong), args("name", "value"),
             "Sets unsigned long value for the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Parameter: *value* (long) - unsigned long value that will be assigned to the given field\n\n::\n\n"
             "    pv.setULong('aLong', 10L)\n\n")
 
-        .def("getULong", static_cast<unsigned long long(PvObject::*)(const std::string&)const>(&PvObject::getULong), PvObjectGetULong(args("name='value'"),
+        .def("getULong", static_cast<uint64(PvObject::*)(const std::string&)const>(&PvObject::getULong), PvObjectGetULong(args("name='value'"),
              "Retrieves unsigned long value assigned to the given PV field.\n\n"
             ":Parameter: *name* (str) - field name\n\n"
             ":Returns: unsigned long stored in the given PV field\n\n::\n\n"
@@ -637,7 +641,7 @@ BOOST_PYTHON_MODULE(easypva)
              "\t:Parameter: *value* (int) - unsigned byte value\n\n"
              "\t::\n\n"
              "\t\tpv = PvUByte(10)\n\n", init<>())
-        .def(init<unsigned char>())
+        .def(init<uint8>())
         .def("get", &PvUByte::get,
              "Retrieves unsigned byte PV value.\n\n"
              ":Returns: unsigned byte value\n\n"
@@ -676,11 +680,11 @@ BOOST_PYTHON_MODULE(easypva)
     // PV UShort
     //
     class_<PvUShort, bases<PvScalar> >("PvUShort",
-             "PvUShort represents PV unsigned short type.\n\n**PvUShort([value=0])**\n\n"
+             "PvUShort represents PV uint16 type.\n\n**PvUShort([value=0])**\n\n"
              "\t:Parameter: *value* (int) - unsigned short value\n\n"
              "\t::\n\n"
              "\t\tpv = PvUShort(10)\n\n", init<>())
-        .def(init<unsigned short>())
+        .def(init<uint16>())
         .def("get", &PvUShort::get,
              "Retrieves unsigned short PV value.\n\n"
              ":Returns: unsigned short value\n\n"
@@ -719,12 +723,12 @@ BOOST_PYTHON_MODULE(easypva)
     // PV UInt
     //
     class_<PvUInt, bases<PvScalar> >("PvUInt",
-             "PvUInt represents PV unsigned int type.\n\n"
+             "PvUInt represents PV uint32 type.\n\n"
              "**PvUInt([value=0])**\n\n"
              "\t:Parameter: *value* (int) - unsigned integer value\n\n"
              "\t::\n\n"
              "\t\tpv = PvUInt(1000)\n\n", init<>())
-        .def(init<unsigned int>())
+        .def(init<uint32>())
         .def("get", &PvUInt::get,  "Retrieves unsigned integer PV value.\n\n"
              ":Returns: unsigned integer value\n\n"
              "::\n\n"
@@ -745,7 +749,7 @@ BOOST_PYTHON_MODULE(easypva)
              "\t:Parameter: *value* (long) - long value\n\n"
              "\t::\n\n"
              "\t\tpv = PvLong(-100000L)\n\n", init<>())
-        .def(init<long long>())
+        .def(init<int64>())
         .def("get", &PvLong::get,
              "Retrieves long PV value.\n\n"
              ":Returns: long value\n\n"
@@ -767,7 +771,7 @@ BOOST_PYTHON_MODULE(easypva)
              "\t:Parameter: *value* (long) - unsigned long value\n\n"
              "\t::\n\n"
              "\t\tpv = PvULong(100000L)\n\n", init<>())
-        .def(init<unsigned long long>())
+        .def(init<uint64>())
         .def("get", &PvULong::get,
              "Retrieves unsigned long PV value.\n\n"
              ":Returns: unsigned long value\n\n"
@@ -889,8 +893,8 @@ BOOST_PYTHON_MODULE(easypva)
              "\t::\n\n"
              "\t\ttimeStamp2 = PvTimeStamp(1234567890, 10000)\n\n"
              "\t\ttimeStamp3 = PvTimeStamp(1234567890, 10000, 1)\n\n", init<>())
-        .def(init<long long, int>())
-        .def(init<long long, int, int>())
+        .def(init<int64, int>())
+        .def(init<int64, int, int>())
         .def("getSecondsPastEpoch", &PvTimeStamp::getSecondsPastEpoch,
              "Retrieves time stamp value for seconds past epoch.\n\n"
              ":Returns: seconds past epoch\n\n"
@@ -977,301 +981,299 @@ BOOST_PYTHON_MODULE(easypva)
              "NtType is a base class for all NT structures. It cannot be instantiated directly from python.\n\n", no_init)
         ;
 
+
     // Channel
+    PvObject* (Channel::*get_request)(const std::string&) = &Channel::get;
+    PvObject* (Channel::*get_default)() = &Channel::get;
+    void (Channel::*put_obj_request)(const PvObject&,const std::string&) = &Channel::put;
+    void (Channel::*put_obj)(const PvObject&) = &Channel::put;
+    void (Channel::*put_string_request)(const std::string&,const std::string&) = &Channel::putString;
+    void (Channel::*put_string)(const std::string&) = &Channel::putString;
+    void (Channel::*put_list_request)(const boost::python::list&,const std::string&) = &Channel::put;
+    void (Channel::*put_list)(const boost::python::list&) = &Channel::put;
+    void (Channel::*put_bool)(bool) = &Channel::putBoolean;
+    void (Channel::*put_bool_request)(bool,const std::string&) = &Channel::putBoolean;
+    void (Channel::*put_byte)(int8) = &Channel::putByte;
+    void (Channel::*put_byte_request)(int8,const std::string&) = &Channel::putByte;
+    void (Channel::*put_ubyte)(uint8) = &Channel::putUByte;
+    void (Channel::*put_ubyte_request)(uint8,const std::string&) = &Channel::putUByte;
+    void (Channel::*put_short)(short) = &Channel::putShort;
+    void (Channel::*put_short_request)(short,const std::string&) = &Channel::putShort;
+    void (Channel::*put_ushort)(uint16) = &Channel::putUShort;
+    void (Channel::*put_ushort_request)(uint16,const std::string&) = &Channel::putUShort;
+    void (Channel::*put_int)(int) = &Channel::putInt;
+    void (Channel::*put_int_request)(int,const std::string&) = &Channel::putInt;
+    void (Channel::*put_uint)(uint32) = &Channel::putUInt;
+    void (Channel::*put_uint_request)(uint32,const std::string&) = &Channel::putUInt;
+    void (Channel::*put_long)(int64) = &Channel::putLong;
+    void (Channel::*put_long_request)(int64,const std::string&) = &Channel::putLong;
+    void (Channel::*put_ulong)(uint64) = &Channel::putULong;
+    void (Channel::*put_ulong_request)(uint64,const std::string&) = &Channel::putULong;
+    void (Channel::*put_float)(float) = &Channel::putFloat;
+    void (Channel::*put_float_request)(float,const std::string&) = &Channel::putFloat;
+    void (Channel::*put_double)(double) = &Channel::putDouble;
+    void (Channel::*put_double_request)(double,const std::string&) = &Channel::putDouble;
+
     class_<Channel>("Channel",
-             "This class represents PV channels.\n\n"
-             "**Channel(name [, providerType=PVA])**\n\n"
-             "\t:Parameter: *name* (str) - channel name\n\n"
-             "\t:Parameter: *providerType* (PROVIDERTYPE) - provider type, either PVA (PV Access) or CA (Channel Access)\n\n"
-             "\tNote that PV structures representing objects on CA channels always have a single key 'value'.\n"
-             "\tThe following example creates PVA channel 'enum01':\n\n"
-             "\t::\n\n"
-             "\t\tpvaChannel = Channel('enum01')\n\n"
-             "\tThis example allows access to CA channel 'CA:INT':\n\n"
-             "\t::\n\n"
-             "\t\tcaChannel = Channel('CA:INT', CA)\n\n", init<std::string,std::string>())
+             "Channel\n"
+             "=======\n\n"
+             "Provides access to easyChannel\n\n"
+             "constructor\n"
+             "    Channel(channelName)\n"
+             "    Channel(channelName,providerName)\n"
+             "        channelName string\n"
+             "        providerName string\n"
+             "           default is 'pva'\n\n"
+             "example\n\n"
+             "    c = Channel('double01')\n"
+             "    print c.get()\n\n",
+        init<std::string,std::string>())
         .def(init<std::string>())
         .def(init<std::string, std::string>())
 
-
-        .def("get", static_cast<PvObject*(Channel::*)(const std::string&)>(&Channel::get), 
-            return_value_policy<manage_new_object>(), args("requestDescriptor"),
-             "Retrieves PV data from the channel.\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n"
-             ":Returns: channel PV data corresponding to the specified request descriptor\n\n"
-             "::\n\n"
-             "    channel = Channel('enum01')\n\n"
-             "    pv = channel.get('field(value.index)')\n\n")
-        .def("get", static_cast<PvObject*(Channel::*)()>(&Channel::get), 
+        .def("get",get_request,
             return_value_policy<manage_new_object>(),
-             "Retrieves PV data from the channel using the default request descriptor 'field(value)'.\n\n"
-             ":Returns: channel PV data\n\n"
-             "::\n\n"
-             "    pv = channel.get()\n\n")
+             "get data from the channel via a request string\n\n"
+             "arg\n"
+             "    request - a string describing the desired field\n"
+             "        an example is 'value,alarm.timeStamp'\n\n"
+             "return - A PvObject\n\n"
+             "example\n"
+             "    channel = Channel('enum01')\n"
+             "    pv = channel.get('field(value.index)')\n"
+             "    print pv\n"
+             )
 
-        .def("put", static_cast<void(Channel::*)(const PvObject&, const std::string&)>(&Channel::put), args("pvObject",
-             "requestDescriptor"),
-             "Assigns PV data to the channel process variable.\n\n"
-             ":Parameter: *pvObject* (PvObject) - PV object that will be assigned to channel PV according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n"
-             "::\n\n"
+        .def("get", get_default,
+            return_value_policy<manage_new_object>(),
+             "get data from the channel with request = 'value'\n\n"
+             "return - A PvObject\n\n"
+             "example\n"
+             "    channel = Channel('double01')\n"
+             "    pv = channel.get()\n"
+             "    print pv\n"
+             )
+
+        .def("put", put_obj_request,
+             "put data to the channel via a PvObject.\n\n"
+             "arg\n"
+             "    pvobject - a PvObject\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
              "    channel = Channel('enum01')\n\n"
-             "    channel.put(PvInt(1), 'field(value.index)')\n\n")
-        .def("put", static_cast<void(Channel::*)(const PvObject&)>(&Channel::put), args("pvObject"),
-             "Assigns PV data to the channel process variable using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *pvObject* (PvObject) - PV object that will be assigned to the channel process variable\n\n"
-             "::\n\n"
-             "    channel = Channel('int01')\n\n"
-             "    channel.put(PvInt(1))\n\n")
+             "    channel.put(PvInt(1), 'field(value.index)')\n\n"
+             )
 
-        .def("putString", static_cast<void(Channel::*)(const std::string&, const std::string&)>(&Channel::put), args("value",
-             "requestDescriptor"),
-             "Assigns string data to the channel PV.\n\n"
-             ":Parameter: *value* (str) - string value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(const std::string&, const std::string&)>(&Channel::put), args("value",
-             "requestDescriptor"),
-             "Assigns string data to the channel PV.\n\n"
-             ":Parameter: *value* (str) - string value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putString", static_cast<void(Channel::*)(const std::string&)>(&Channel::put), args("value"),
-             "Assigns string data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (str) - string value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('string01')\n\n"
-             "    channel.putString('string value')\n\n")
-        .def("put", static_cast<void(Channel::*)(const std::string&)>(&Channel::put), args("value"),
-             "Assigns string data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (str) - string value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('string01')\n\n"
-             "    channel.put('string value')\n\n")
+        .def("put", put_obj,
+             "put data to the channel via a PvObject.\n\n"
+             "arg\n"
+             "    pvobject - a PvObject\n"
+             "example\n"
+             "    channel = Channel('double')\n\n"
+             "    channel.put(PvDouble(1.0))\n\n"
+             )
 
-        .def("putScalarArray", static_cast<void(Channel::*)(const boost::python::list&, const std::string&)>(&Channel::put), args("valueList",
-             "requestDescriptor"),
-             "Assigns scalar array data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *valueList* (list) - list of scalar values that will be assigned to the channel PV\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(const boost::python::list&, const std::string&)>(&Channel::put), args("valueList",
-             "requestDescriptor"),
-             "Assigns scalar array data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *valueList* (list) - list of scalar values that will be assigned to the channel PV\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putScalarArray", static_cast<void(Channel::*)(const boost::python::list&)>(&Channel::put), args("valueList"),
-             "Assigns scalar array data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *valueList* (list) - list of scalar values that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('intArray01')\n\n"
-             "    channel.putScalarArray([0,1,2,3,4])\n\n")
-        .def("put", static_cast<void(Channel::*)(const boost::python::list&)>(&Channel::put), args("valueList"),
-             "Assigns scalar array data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *valueList* (list) - list of scalar values that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('intArray01')\n\n"
-             "    channel.put([0,1,2,3,4])\n\n")
+        .def("putString", put_string_request,
+             "put data to the channel via a string.\n\n"
+             "arg\n"
+             "    value - string\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put('new value', 'field(value.index)')\n\n"
+             )
+        .def("put", put_string_request,
+             "put data to the channel via a string.\n\n"
+             "arg\n"
+             "    value - string\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put('new value', 'field(value.index)')\n\n"
+             )
+        .def("putString", put_string,
+             "put data to the channel via a string.\n\n"
+             "arg\n"
+             "    value - string\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put('new value', 'field(value.index)')\n\n"
+             )
+        .def("put", put_string,
+             "put data to the channel via a string.\n\n"
+             "arg\n"
+             "    value - string\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put('new value', 'field(value.index)')\n\n"
+             )
+        .def("putScalarArray", put_list_request,
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("put", put_list_request,
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putScalarArray", put_list,
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             )
+        .def("put", put_list,
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             )
 
-        .def("putBoolean", static_cast<void(Channel::*)(bool, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns boolean data to the channel PV.\n\n"
-             ":Parameter: *value* (bool) - boolean value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(bool, const std::string&)>(&Channel::put), args("value",
-             "requestDescriptor"),
-             "Assigns boolean data to the channel PV.\n\n"
-             ":Parameter: *value* (bool) - boolean value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putBoolean", static_cast<void(Channel::*)(bool)>(&Channel::put), args("value"),
-             "Assigns boolean data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (bool) - boolean value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('boolean01')\n\n"
-             "    channel.putBoolean(True)\n\n")
-        .def("put", static_cast<void(Channel::*)(bool)>(&Channel::put), args("value"),
-             "Assigns boolean data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (bool) - boolean value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('boolean01')\n\n"
-             "    channel.put(True)\n\n")
+        .def("putBoolean", put_bool_request,
+             "put data to a channel via a boolean.\n\n"
+             "arg\n"
+             "    value - True or False\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putBoolean", put_bool,
+             "put data to a channel via a boolean.\n\n"
+             "arg\n"
+             "    value - True or False\n"
+             )
 
-        // Do not define simple put() for byte data type at the moment: byte is interpreted as string, and python cannot pickup
-        // correct method for strings, so that put('my string') would not work 
-        // put() should still work even without explicit maping, but will not be documented
-        .def("putByte", static_cast<void(Channel::*)(char, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns byte data to the channel PV.\n\n"
-             ":Parameter: *value* (str) - byte value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        //.def("put", static_cast<void(Channel::*)(char, const std::string&)>(&Channel::put), args("value", "requestDescriptor"), "Assigns byte data to the channel PV.\n\n:Parameter: *value* (str) - byte value that will be assigned to channel data according to the specified request descriptor\n\n:Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putByte", static_cast<void(Channel::*)(char)>(&Channel::put), args("value"),
-             "Assigns byte data to the channel using the default request descriptor 'field(value)'.\n\n:Parameter: *value* (str) - byte value that will be assigned to the channel PV\n\n::\n\n    channel = Channel('byte01')\n\n    channel.putByte('x')\n\n")
-        //.def("put", static_cast<void(Channel::*)(char)>(&Channel::put), args("value"), "Assigns byte data to the channel using the default request descriptor 'field(value)'.\n\n:Parameter: *value* (str) - byte value that will be assigned to the channel PV\n\n::\n\n    channel = Channel('byte01')\n\n    channel.put('10')\n\n")
+        .def("putByte", put_byte_request,
+             "put data to a channel via an 8 bit integer.\n\n"
+             "arg\n"
+             "    value - an 8 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putByte", put_byte,
+             "put data to a channel via an 8 bit integer.\n\n"
+             "arg\n"
+             "    value - an 8 bit integer\n"
+             )
 
-        .def("putUByte", static_cast<void(Channel::*)(unsigned char, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned byte data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - unsigned byte value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(unsigned char, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned byte data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - unsigned byte value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putUByte", static_cast<void(Channel::*)(unsigned char)>(&Channel::put), args("value"),
-             "Assigns unsigned byte data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - unsigned byte value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('ubyte01')\n\n"
-             "    channel.putUByte(10)\n\n")
-        .def("put", static_cast<void(Channel::*)(unsigned char)>(&Channel::put), args("value"),
-             "Assigns unsigned byte data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - unsigned byte value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('ubyte01')\n\n"
-             "    channel.put(10)\n\n")
+        .def("putUByte", put_ubyte_request,
+             "put data to a channel via an unsigned 8 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 8 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putUByte", put_ubyte,
+             "put data to a channel via an unsigned 8 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 8 bit integer\n"
+             )
 
-        .def("putShort", static_cast<void(Channel::*)(short, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns short data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - short value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(short, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns short data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - short value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putShort", static_cast<void(Channel::*)(short)>(&Channel::put), args("value"),
-             "Assigns short data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - short value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('short01')\n\n"
-             "    channel.putShort(10)\n\n")
-        .def("put", static_cast<void(Channel::*)(short)>(&Channel::put), args("value"),
-             "Assigns short data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - short value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('short01')\n\n"
-             "    channel.put(10)\n\n")
+        .def("putShort", put_short_request,
+             "put data to a channel via an 16 bit integer.\n\n"
+             "arg\n"
+             "    value - an 16 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putShort", put_short,
+             "put data to a channel via an 16 bit integer.\n\n"
+             "arg\n"
+             "    value - an 16 bit integer\n"
+             )
+        .def("putUShort", put_ushort_request,
+             "put data to a channel via an unsigned 16 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 16 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putUShort", put_ushort,
+             "put data to a channel via an unsigned 16 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 16 bit integer\n"
+             )
 
-        .def("putUShort", static_cast<void(Channel::*)(unsigned short, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned short data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - unsigned short value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(unsigned short, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned short data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - unsigned short value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putUShort", static_cast<void(Channel::*)(unsigned short)>(&Channel::put), args("value"),
-             "Assigns unsigned short data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - unsigned short value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('ushort01')\n\n"
-             "    channel.putUShort(10)\n\n")
-        .def("put", static_cast<void(Channel::*)(unsigned short)>(&Channel::put), args("value"),
-             "Assigns unsigned short data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - unsigned short value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('ushort01')\n\n"
-             "    channel.put(10)\n\n")
+        .def("putInt", put_int_request,
+             "put data to a channel via an 32 bit integer.\n\n"
+             "arg\n"
+             "    value - an 32 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putInt", put_int,
+             "put data to a channel via a32 bit integer.\n\n"
+             "arg\n"
+             "    value - a32 bit integer\n"
+             )
 
-        .def("putInt", static_cast<void(Channel::*)(int, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns integer data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - integer value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(int, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns integer data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - integer value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putInt", static_cast<void(Channel::*)(int)>(&Channel::put), args("value"),
-             "Assigns integer data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - integer value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('int01')\n\n"
-             "    channel.putInt(1000)\n\n")
-        .def("put", static_cast<void(Channel::*)(int)>(&Channel::put), args("value"),
-             "Assigns integer data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - integer value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('int01')\n\n"
-             "    channel.put(1000)\n\n")
+        .def("putUInt", put_uint_request,
+             "put data to a channel via an unsigned 32 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 32 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putUInt", put_uint,
+             "put data to a channel via an unsigned 32 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 32 bit integer\n"
+             )
 
-        .def("putUInt", static_cast<void(Channel::*)(unsigned int, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned integer data to the channel PV.\n\n"
-             ":Parameter: *value* (int) - unsigned integer value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putUInt", static_cast<void(Channel::*)(unsigned int)>(&Channel::put), args("value"),
-             "Assigns unsigned integer data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (int) - unsigned integer value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('uint01')\n\n"
-             "    channel.putUInt(1000)\n\n")
+        .def("putLong", put_long_request,
+             "put data to a channel via a 64 bit integer.\n\n"
+             "arg\n"
+             "    value - an 64 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putLong", put_long,
+             "put data to a channel via a 64 bit integer.\n\n"
+             "arg\n"
+             "    value - an 64 bit integer\n"
+             )
 
-        .def("putLong", static_cast<void(Channel::*)(long long, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns long data to the channel PV.\n\n"
-             ":Parameter: *value* (long) - long value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(long long, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns long data to the channel PV.\n\n"
-             ":Parameter: *value* (long) - long value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putLong", static_cast<void(Channel::*)(long long)>(&Channel::put), args("value"),
-             "Assigns long data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (long) - long value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('long01')\n\n"
-             "    channel.putLong(100000L)\n\n")
-        .def("put", static_cast<void(Channel::*)(long long)>(&Channel::put), args("value"),
-             "Assigns long data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (long) - long value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('long01')\n\n"
-             "    channel.put(100000L)\n\n")
+        .def("putULong", put_ulong_request,
+             "put data to a channel via an unsigned 64 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 64 bit integer\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putULong", put_ulong,
+             "put data to a channel via an unsigned 64 bit integer.\n\n"
+             "arg\n"
+             "    value - an unsigned 64 bit integer\n"
+             )
 
-        .def("putULong", static_cast<void(Channel::*)(unsigned long long, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns unsigned long data to the channel PV.\n\n"
-             ":Parameter: *value* (long) - unsigned long value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putULong", static_cast<void(Channel::*)(unsigned long long)>(&Channel::put), args("value"),
-             "Assigns unsigned long data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (long) - unsigned long value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('ulong01')\n\n"
-             "    channel.putULong(100000L)\n\n")
+        .def("putFloat", put_float_request,
+             "put data to a channel via a float.\n\n"
+             "arg\n"
+             "    value - a float\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putFloat", put_float,
+             "put data to a channel via a float.\n\n"
+             "arg\n"
+             "    value - a float\n"
+             )
 
-        .def("putFloat", static_cast<void(Channel::*)(float, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns float data to the channel PV.\n\n"
-             ":Parameter: *value* (float) - float value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(float, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns float data to the channel PV.\n\n"
-             ":Parameter: *value* (float) - float value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putFloat", static_cast<void(Channel::*)(float)>(&Channel::put), args("value"),
-             "Assigns float data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (float) - float value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('float01')\n\n"
-             "    channel.putFloat(1.1)\n\n")
-        .def("put", static_cast<void(Channel::*)(float)>(&Channel::put), args("value"),
-             "Assigns float data to the channel PV using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (float) - float value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('float01')\n\n"
-             "    channel.put(1.1)\n\n")
+        .def("putDouble", put_double_request,
+             "put data to a channel via a double.\n\n"
+             "arg\n"
+             "    value - a double\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("putDouble", put_double,
+             "put data to a channel via a double.\n\n"
+             "arg\n"
+             "    value - a double\n"
+             )
+        .def("put", put_double_request,
+             "put data to a channel via a double.\n\n"
+             "arg\n"
+             "    value - a double\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("put", put_double,
+             "put data to a channel via a double.\n\n"
+             "arg\n"
+             "    value - a double\n"
+             )
 
-        .def("putDouble", static_cast<void(Channel::*)(double, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns double data to the channel PV.\n\n"
-             ":Parameter: *value* (float) - double value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("put", static_cast<void(Channel::*)(double, const std::string&)>(&Channel::put), args("value", "requestDescriptor"),
-             "Assigns double data to the channel PV.\n\n"
-             ":Parameter: *value* (float) - double value that will be assigned to channel data according to the specified request descriptor\n\n"
-             ":Parameter: *requestDescriptor* (str) - PV request descriptor\n\n")
-        .def("putDouble", static_cast<void(Channel::*)(double)>(&Channel::put), args("value"),
-             "Puts double data into the channel using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (float) - double value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('double01')\n\n"
-             "    channel.putDouble(1.1)\n\n")
-        .def("put", static_cast<void(Channel::*)(double)>(&Channel::put), args("value"),
-             "Puts double data into the channel using the default request descriptor 'field(value)'.\n\n"
-             ":Parameter: *value* (float) - double value that will be assigned to the channel PV\n\n"
-             "::\n\n"
-             "    channel = Channel('double01')\n\n"
-             "    channel.put(1.1)\n\n")
 
         .def("getTimeout", &Channel::getTimeout,
              "Retrieves channel timeout.\n\n"
@@ -1284,6 +1286,59 @@ BOOST_PYTHON_MODULE(easypva)
              "::\n\n"
              "    channel.setTimeout(10.0)\n\n")
         ;
+
+        // Monitor
+        class_<PVAPYMonitor>("Monitor",
+             "Monitor\n"
+             "=======\n\n"
+             "Provides access to easyMonitor\n\n"
+             "constructor\n"
+             "    Monitor(channel)\n"
+             "    Monitor(channel,request)\n"
+             "    Monitor(channel,request,autoConnect)\n"
+             "       channel - Must be connected Channel\n"
+             "       request - string\n"
+             "          example is \"value,alarm.timeStamp\"\n"
+             "          default is \"value\"\n"
+             "       autoStart - True or False\n"
+             "          default is True\n"
+             "\n",
+           init<Channel>())
+
+        .def(init<Channel,std::string>())
+        .def(init<Channel,std::string,bool>())
+        .def("start",&PVAPYMonitor::start,
+            "start listening for monitors\n"
+            "")
+        .def("stop",&PVAPYMonitor::stop,
+            "stop listening for monitors\n"
+            "")
+        .def("waitEvent",&PVAPYMonitor::waitEvent,
+            args("secondsToWait"),
+            (arg("secondsToWait") = 0.0),
+            "wait for a monitor event\n\n"
+            "arg\n"
+            "   secondsToWait - number of seconds to wait for an event\n"
+            "      a value of 0.0 means wait forever.\n\n"
+            "return - True of False\n"
+            "   If True then getData can be called.\n"
+            "")
+        .def("getData", &PVAPYMonitor::getData, 
+            return_value_policy<manage_new_object>(),
+            "get the data for the last sucessful waitEvent or poll\n"
+            "return - True of False\n"
+            "   If True then getData can be called.\n"
+            "")
+        .def("poll",&PVAPYMonitor::poll,
+            "poll for a new event\n\n"
+            "return - True of False\n"
+            "   If True then getData can be called.\n"
+            "")
+        .def("releaseEvent",&PVAPYMonitor::releaseEvent,
+            "release the event returned by the last poll or waitEvent\n"
+            "   this must be called before again calling poll or waitEvent\n\n"
+            "")
+         ;
 
         // RPC Client
          class_<RpcClient>("RpcClient", "RpcClient is a client class for PVA RPC services.\n\n"

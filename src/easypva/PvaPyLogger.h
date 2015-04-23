@@ -5,6 +5,8 @@
 #include <cstdarg>
 #include <cstdio>
 
+namespace epics { namespace pvaPy {
+
 class PvaPyLogger
 {
 public:
@@ -124,5 +126,6 @@ inline void PvaPyLogger::disableEpicsLog()
     useEpicsLog = false;
 }
 
+}}
 #endif
 

@@ -4,6 +4,7 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
 /**
  * Field not found error.
  */
@@ -14,4 +15,5 @@ public:
     FieldNotFound(const char* message, ...);
 };
 
+}}
 #endif 

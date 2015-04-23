@@ -21,23 +21,26 @@ newValue = c.get().getString()
 print 'Got new value: ', newValue
 assert newValue == value
 
+# set value back to original
+c.put(oldValue)
+
 print
 print '****************************'
 print 'Testing byte'
 c = Channel('byte01')
-oldValue = ord(c.get().getByte())
+oldValue = c.get().getByte()
 print 'Got old value: ', oldValue
 value = oldValue + 10
 print 'Putting value via putByte(): ', value
-c.putByte(chr(value)) 
-newValue = ord(c.get().getByte())
+c.putByte(value) 
+newValue = c.get().getByte()
 print 'Got new value: ', newValue
 assert newValue == value
 
 value = oldValue + 5
 print 'Putting value via put(): ', value
 c.put(value) 
-newValue = ord(c.get().getByte())
+newValue = c.get().getByte()
 print 'Got new value: ', newValue
 assert newValue == value
 
@@ -140,6 +143,46 @@ value = oldValue + 2
 print 'Putting value via put(): ', value
 c.put(value) 
 newValue = c.get().getUInt()
+print 'Got new value: ', newValue
+assert newValue == value
+
+print
+print '****************************'
+print 'Testing long'
+c = Channel('long01')
+oldValue = c.get().getLong()
+print 'Got old value: ', oldValue
+value = oldValue + 1
+print 'Putting value via putLong(): ', value
+c.putLong(value) 
+newValue = c.get().getLong()
+print 'Got new value: ', newValue
+assert newValue == value
+
+value = oldValue + 2
+print 'Putting value via put(): ', value
+c.put(value) 
+newValue = c.get().getLong()
+print 'Got new value: ', newValue
+assert newValue == value
+
+print
+print '****************************'
+print 'Testing ulong'
+c = Channel('ulong01')
+oldValue = c.get().getULong()
+print 'Got old value: ', oldValue
+value = oldValue + 1
+print 'Putting value via putULong(): ', value
+c.putULong(value) 
+newValue = c.get().getULong()
+print 'Got new value: ', newValue
+assert newValue == value
+
+value = oldValue + 2
+print 'Putting value via put(): ', value
+c.put(value) 
+newValue = c.get().getULong()
 print 'Got new value: ', newValue
 assert newValue == value
 

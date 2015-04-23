@@ -4,17 +4,20 @@
 #include "pv/pvData.h"
 #include "PvScalar.h"
 
+namespace epics { namespace pvaPy {
+
 class PvULong : public PvScalar
 {
 public:
     PvULong();
-    PvULong(unsigned long long ull);
+    PvULong(epics::pvData::uint64 ull);
     virtual ~PvULong();
 
-    void set(unsigned long long ull);
-    unsigned long long get() const;
+    void set(epics::pvData::uint64 ull);
+    epics::pvData::uint64 get() const;
 private:
     static boost::python::dict createStructureDict();
 };
 
+}}
 #endif

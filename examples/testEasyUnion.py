@@ -15,7 +15,6 @@ names = pv.unionGetFieldNames()
 print "union fieldNames",names
 value = pv.unionSelect(names[0])
 value.setString("new value")
-pv.unionSet(value)
 value = pv.unionGet()
 print "putting",pv
 c.put(pv)

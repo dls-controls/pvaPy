@@ -1,13 +1,16 @@
 #include "PvTimeStamp.h"
 #include "PvType.h"
 
+namespace epics { namespace pvaPy {
+
+
 const char* PvTimeStamp::StructureId("time_t");
 
 const char* PvTimeStamp::SecondsPastEpochFieldKey("secondsPastEpoch");
 const char* PvTimeStamp::NanosecondsFieldKey("nanoseconds");
 const char* PvTimeStamp::UserTagFieldKey("userTag");
 
-const int PvTimeStamp::UnknownUserTag(-1);
+const epics::pvData::int32 PvTimeStamp::UnknownUserTag(-1);
 
 boost::python::dict PvTimeStamp::createStructureDict()
 {
@@ -27,7 +30,7 @@ PvTimeStamp::PvTimeStamp()
     setUserTag(UnknownUserTag);
 }
 
-PvTimeStamp::PvTimeStamp(long long secondsPastEpoch, int nanoseconds)
+PvTimeStamp::PvTimeStamp(epics::pvData::int64 secondsPastEpoch, epics::pvData::int32 nanoseconds)
     : PvObject(createStructureDict(), StructureId)
 {
     setSecondsPastEpoch(secondsPastEpoch);
@@ -35,7 +38,7 @@ PvTimeStamp::PvTimeStamp(long long secondsPastEpoch, int nanoseconds)
     setUserTag(UnknownUserTag);
 }
 
-PvTimeStamp::PvTimeStamp(long long secondsPastEpoch, int nanoseconds, int userTag)
+PvTimeStamp::PvTimeStamp(epics::pvData::int64 secondsPastEpoch, epics::pvData::int32 nanoseconds, epics::pvData::int32 userTag)
     : PvObject(createStructureDict(), StructureId)
 {
     setSecondsPastEpoch(secondsPastEpoch);
@@ -62,33 +65,35 @@ PvTimeStamp::~PvTimeStamp()
 {
 }
 
-void PvTimeStamp::setSecondsPastEpoch(long long secondsPastEpoch)
+void PvTimeStamp::setSecondsPastEpoch(epics::pvData::int64 long secondsPastEpoch)
 {
     pvStructurePtr->getLongField(SecondsPastEpochFieldKey)->put(secondsPastEpoch);
 }
 
-long long PvTimeStamp::getSecondsPastEpoch() const
+epics::pvData::int64 long PvTimeStamp::getSecondsPastEpoch() const
 {
     return pvStructurePtr->getLongField(SecondsPastEpochFieldKey)->get();
 }
 
-void PvTimeStamp::setNanoseconds(int nanoseconds)
+void PvTimeStamp::setNanoseconds(epics::pvData::int32 nanoseconds)
 {
     pvStructurePtr->getIntField(NanosecondsFieldKey)->put(nanoseconds);
 }
 
-int PvTimeStamp::getNanoseconds() const
+epics::pvData::int32 PvTimeStamp::getNanoseconds() const
 {
     return pvStructurePtr->getIntField(NanosecondsFieldKey)->get();
 }
 
-void PvTimeStamp::setUserTag(int userTag)
+void PvTimeStamp::setUserTag(epics::pvData::int32 userTag)
 {
     pvStructurePtr->getIntField(UserTagFieldKey)->put(userTag);
 }
 
-int PvTimeStamp::getUserTag() const
+epics::pvData::int32 PvTimeStamp::getUserTag() const
 {
     return pvStructurePtr->getIntField(UserTagFieldKey)->get();
 }
+
+}}
 

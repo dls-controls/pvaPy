@@ -1,8 +1,7 @@
 #include <algorithm>
 #include "StringUtility.h"
 
-namespace StringUtility
-{
+namespace epics { namespace pvaPy { namespace StringUtility {
 
 std::string toString(char* s) 
 {
@@ -44,4 +43,4 @@ std::string trim(const std::string& s)
     return leftTrim(rightTrim(s2));
 }
 
-} // namespace StringUtility
+}}}

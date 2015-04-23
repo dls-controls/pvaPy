@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "InvalidArgument.h"
 
+namespace epics { namespace pvaPy {
+
+
 InvalidArgument::InvalidArgument(const std::string& message) :
     PvaException(message)
 {
@@ -17,3 +20,4 @@ InvalidArgument::InvalidArgument(const char* message, ...) :
     va_end(messageArgs);
 }
 
+}}

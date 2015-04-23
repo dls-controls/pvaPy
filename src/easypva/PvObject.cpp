@@ -1,4 +1,5 @@
 #include "PvObject.h"
+#include "PvType.h"
 #include "PvaException.h"
 #include "PyPvDataUtility.h"
 #include "StringUtility.h"
@@ -9,9 +10,13 @@
 #include "boost/python/tuple.hpp"
 #include "boost/python/extract.hpp"
 #include "boost/python/stl_iterator.hpp"
+#include <pv/standardField.h>
+
+namespace epics { namespace pvaPy {
 
 using namespace epics::pvData;
 using namespace std;
+
 
 // Static constants
 const char* PvObject::ValueFieldKey("value");
@@ -115,129 +120,129 @@ bool PvObject::getBoolean(const std::string& key) const
 }
 
 // Byte modifiers/accessors
-void PvObject::setByte(const std::string& key, char value)
+void PvObject::setByte(const std::string& key, int8 value)
 {
     PyPvDataUtility::getByteField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setByte(char value)
+void PvObject::setByte(int8 value)
 {
     PyPvDataUtility::getByteField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-char PvObject::getByte(const std::string& key) const
+int8 PvObject::getByte(const std::string& key) const
 {
     return PyPvDataUtility::getByteField(key, pvStructurePtr)->get();
 }
 
 // UByte modifiers/accessors
-void PvObject::setUByte(const std::string& key, unsigned char value)
+void PvObject::setUByte(const std::string& key, uint8 value)
 {
     PyPvDataUtility::getUByteField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setUByte(unsigned char value)
+void PvObject::setUByte(uint8 value)
 {
     PyPvDataUtility::getUByteField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-unsigned char PvObject::getUByte(const std::string& key) const
+uint8 PvObject::getUByte(const std::string& key) const
 {
     return PyPvDataUtility::getUByteField(key, pvStructurePtr)->get();
 }
 
 // Short modifiers/accessors
-void PvObject::setShort(const std::string& key, short value)
+void PvObject::setShort(const std::string& key, int16 value)
 {
     PyPvDataUtility::getShortField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setShort(short value)
+void PvObject::setShort(int16 value)
 {
     PyPvDataUtility::getShortField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-short PvObject::getShort(const std::string& key) const
+int16 PvObject::getShort(const std::string& key) const
 {
     return PyPvDataUtility::getShortField(key, pvStructurePtr)->get();
 }
 
 // UShort modifiers/accessors
-void PvObject::setUShort(const std::string& key, unsigned short value)
+void PvObject::setUShort(const std::string& key, uint16 value)
 {
     PyPvDataUtility::getUShortField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setUShort(unsigned short value)
+void PvObject::setUShort(uint16 value)
 {
     PyPvDataUtility::getUShortField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-unsigned short PvObject::getUShort(const std::string& key) const
+uint16 PvObject::getUShort(const std::string& key) const
 {
     return PyPvDataUtility::getUShortField(key, pvStructurePtr)->get();
 }
 
 // Int modifiers/accessors
-void PvObject::setInt(const std::string& key, int value)
+void PvObject::setInt(const std::string& key, int32 value)
 {
     PyPvDataUtility::getIntField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setInt(int value)
+void PvObject::setInt(int32 value)
 {
     PyPvDataUtility::getIntField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-int PvObject::getInt(const std::string& key) const
+int32 PvObject::getInt(const std::string& key) const
 {
     return PyPvDataUtility::getIntField(key, pvStructurePtr)->get();
 }
 
 // UInt modifiers/accessors
-void PvObject::setUInt(const std::string& key, unsigned int value)
+void PvObject::setUInt(const std::string& key, uint32 value)
 {
     PyPvDataUtility::getUIntField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setUInt(unsigned int value)
+void PvObject::setUInt(uint32 value)
 {
     PyPvDataUtility::getUIntField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-unsigned int PvObject::getUInt(const std::string& key) const
+uint32 PvObject::getUInt(const std::string& key) const
 {
     return PyPvDataUtility::getUIntField(key, pvStructurePtr)->get();
 }
 
 // Long modifiers/accessors
-void PvObject::setLong(const std::string& key, long long value)
+void PvObject::setLong(const std::string& key, int64 value)
 {
     PyPvDataUtility::getLongField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setLong(long long value)
+void PvObject::setLong(int64 value)
 {
     PyPvDataUtility::getLongField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-long long PvObject::getLong(const std::string& key) const
+int64 PvObject::getLong(const std::string& key) const
 {
     return PyPvDataUtility::getLongField(key, pvStructurePtr)->get();
 }
 
 // ULong modifiers/accessors
-void PvObject::setULong(const std::string& key, unsigned long long value)
+void PvObject::setULong(const std::string& key, uint64 value)
 {
     PyPvDataUtility::getULongField(key, pvStructurePtr)->put(value);
 }
 
-void PvObject::setULong(unsigned long long value)
+void PvObject::setULong(uint64 value)
 {
     PyPvDataUtility::getULongField(ValueFieldKey, pvStructurePtr)->put(value);
 }
 
-unsigned long long PvObject::getULong(const std::string& key) const
+uint64 PvObject::getULong(const std::string& key) const
 {
     return PyPvDataUtility::getULongField(key, pvStructurePtr)->get();
 }
@@ -616,6 +621,96 @@ epics::pvData::StructureConstPtr PvObject::createStructureFromDict(const boost::
         boost::python::extract<boost::python::dict> dictExtract(valueObject);
         if (dictExtract.check()) {
             boost::python::dict pyDict2 = dictExtract();
+            boost::python::list fieldNames = pyDict2.keys();
+            if(boost::python::len(fieldNames)==1) {
+                boost::python::object fieldNameObject = fieldNames[0];
+                boost::python::extract<std::string> fieldNameExtract(fieldNameObject);
+                if(fieldNameExtract.check()) {
+                    string name = fieldNameExtract();
+                    if(name=="UNION") {
+                       boost::python::object valueObject = pyDict2[fieldNameObject];
+                       if(valueObject.is_none()) {
+                           fields.push_back(getFieldCreate()->createVariantUnion());
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
+                       if(pvObjectExtract.check()) {
+                           PvObject pv = pvObjectExtract();
+                           StructureConstPtr s = pv.getStructurePtr();
+                           FieldConstPtrArray f = s->getFields();
+                           StringArray n = s->getFieldNames();
+                           fields.push_back(getFieldCreate()->createUnion(n,f));
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                    }
+                    if(name=="[UNION]") {
+                       boost::python::object valueObject = pyDict2[fieldNameObject];
+                       if(valueObject.is_none()) {
+                           fields.push_back(getFieldCreate()->createVariantUnionArray());
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
+                       if(pvObjectExtract.check()) {
+                           PvObject pv = pvObjectExtract();
+                           StructureConstPtr s = pv.getStructurePtr();
+                           FieldConstPtrArray f = s->getFields();
+                           StringArray n = s->getFieldNames();
+                           UnionConstPtr u = getFieldCreate()->createUnion(n,f);
+                           fields.push_back(getFieldCreate()->createUnionArray(u));
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                    }
+                    if(name=="STRUCTURE") {
+                       boost::python::object valueObject = pyDict2[fieldNameObject];
+                       boost::python::extract<std::string> stringExtract(valueObject);
+                       if(stringExtract.check()) {
+                           string name = stringExtract();
+                           if(name=="alarm") {
+                               fields.push_back(getStandardField()->alarm());
+                               names.push_back(fieldName);
+                               continue;
+                           }
+                           if(name== "timeStamp") {
+                               fields.push_back(getStandardField()->timeStamp());
+                               names.push_back(fieldName);
+                               continue;
+                           }
+                           if(name== "display") {
+                               fields.push_back(getStandardField()->display());
+                               names.push_back(fieldName);
+                               continue;
+                           }
+                           if(name== "control") {
+                               fields.push_back(getStandardField()->control());
+                               names.push_back(fieldName);
+                               continue;
+                           }
+                       }
+                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
+                       if(pvObjectExtract.check()) {
+                           PvObject pv = pvObjectExtract();
+                           fields.push_back(pv.getStructurePtr());
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                    }
+                    if(name=="[STRUCTURE]") {
+                       boost::python::object valueObject = pyDict2[fieldNameObject];
+                       boost::python::extract<std::string> stringExtract(valueObject);
+                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
+                       if(pvObjectExtract.check()) {
+                           PvObject pv = pvObjectExtract();
+                           fields.push_back(getFieldCreate()->createStructureArray(pv.getPvStructurePtr()->getStructure()));
+                           names.push_back(fieldName);
+                           continue;
+                       }
+                    }
+                }
+            }
             int dictSize = boost::python::len(pyDict2);
             if (!dictSize) {
                 throw InvalidArgument("PV type dict provided for field name %s must be non-empty.", fieldName.c_str());
@@ -627,12 +722,10 @@ epics::pvData::StructureConstPtr PvObject::createStructureFromDict(const boost::
         // Check for PvObject: PvObject => Structure
         boost::python::extract<PvObject> pvObjectExtract(valueObject);
         if (pvObjectExtract.check()) {
-            boost::python::dict pyDict2 = static_cast<boost::python::dict>(pvObjectExtract());
-            int dictSize = boost::python::len(pyDict2);
-            if (!dictSize) {
-                throw InvalidArgument("PV object dict provided for field name %s must be non-empty.", fieldName.c_str());
-            }
-            addStructureField(fieldName, pyDict2, fields, names);
+            PvObject pv = pvObjectExtract();
+            StructureConstPtr s = pv.getStructurePtr();
+            fields.push_back(s);
+            names.push_back(fieldName);
             continue;
         }
         else {
@@ -671,5 +764,7 @@ void PvObject::addStructureArrayField(const std::string& fieldName, const boost:
     fields.push_back(epics::pvData::getFieldCreate()->createStructureArray(createStructureFromDict(pyDict)));
     names.push_back(fieldName);
 }
+
+}}
 
 

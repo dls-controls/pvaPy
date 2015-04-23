@@ -1,0 +1,134 @@
+<h1>Comments about easypva vs pvaccess</h1>
+<p>These comments are mostly for Sinisa Veseli.</p>
+<p>In branch feature/easyPVACPP the directory structure is as follows:</p>
+<pre><code>src
+    pvaccess
+    easypva
+examples
+</code></pre>
+<ul>
+<li>pvaccess has no changes.</li>
+<li>easypva has code that has been copied from pvaccess and modified.</li>
+<li>examples has new files with names *Easy*.py. Old files are unmodified</li>
+</ul>
+<p>This was done so that it is easier to compare existing code with
+proposed changes and additions.</p>
+<p>It is NOT meant to be the final structure for the code.
+Assuming Sinisa agrees with many of the changes, I see some possibilities:</p>
+<ul>
+<li>replace pvaccess with easypva, i. e. only easypva exists.</li>
+<li>keep both with a warning that pvaccess will become deprecated</li>
+<li>rename easypva to pvapy.</li>
+<li>???</li>
+</ul>
+<p>The rest of these notes describe what has been done in easypva.</p>
+<h2>easypva - general comments</h2>
+<p>The following is a summary of changes:</p>
+<ul>
+<li>All code has been put in namespace epics::pvaPy</li>
+<li>PvObject now supports union and unionArray</li>
+<li>Channel now uses easyPVA</li>
+<li>Monitors are implemented via easyMonitor</li>
+<li>RpcClent is like pvaccess</li>
+<li>normativeTypes has not been implemented.</li>
+<li>RpcServer has not been implemented.</li>
+<li>For byte, ubyte, ..., the typedefs epics::pvData::int8, etc are use almost
+everywhere.
+The exceptions I know about are PvScalar and PyUtility.cpp</li>
+<li>easypva.cpp The doc strings have been broken up into multiple lines.</li>
+<li>PVA_RPC_API_VERSION no longer supported.</li>
+</ul>
+<p>I have not had time to think about normativeTypes and RpcServer.</p>
+<h2>easypva - PyObject</h2>
+<p>This is quite similar to what is in pvaccess except for:</p>
+<ul>
+<li>namespace is now epics::pvaPy</li>
+<li>now supports union and unionArray</li>
+<li>uses pvData definitions for int8, ..., uint64 almost everywhere.</li>
+</ul>
+<p>pvaPy only wraps the pvData data interfaces and not
+the introspection interfaces.
+Thus the support for union uses the following convention:
+for python access to the union fields:</p>
+<ul>
+<li>For variant unions the python code can create PvObjects itself
+but for regular unions the PvObject are always created by the C++ code.</li>
+<li>Values for a union field are always presented to the python code
+as a structure with a single subfield with the name value.</li>
+</ul>
+<p>A regular union looks like:</p>
+<pre><code> structure
+     union value
+</code></pre>
+<p>A variant union looks like:</p>
+<pre><code> structure
+     any value
+</code></pre>
+<p>Look at testEasyPvObject2.py for an example and at Channel.h and Channel.cpp
+to see how union is impemented.</p>
+<p><b>Suggestion:</b></p>
+<ul>
+<li>A PvObject is always a wapper for a PVStructure.
+So rename PvObject to Structure.
+In the C++ code the name PVAPYStructure can be used.
+This is similar to PVAPYMonitor and Monitor.</li>
+<li>Put PvBoolean,... PvScalarArray code in PVAPYStructure.h and PVAPYStructure.cpp instead of separate files.</li>
+</ul>
+<h2>easypva - Channel</h2>
+<p>:
+The main changes to Channel are:</p>
+<ul>
+<li>Monitor is now handled by class Monitor.</li>
+<li>Channel now uses easyPVA instead of implementing the channel methods itself.</li>
+<li>The names for the various types have been changed to reflect the python name.
+For example put(double) is now named putDouble(double)</li>
+</ul>
+<p>Channel should be extended to support channelPutGet.</p>
+<p>What about channelArray?</p>
+<h2>easypva - Monitor</h2>
+<p>Instead of being implemented by Channel it is now a separate class.
+To the python client the name is Monitor.
+In the C++ code it is PVAPYMonitor.
+This is so that there is no conflict with class Monitor in pvData.</p>
+<p>Monitor does not implement subscribe like the original Channel did.
+My thought is that if a python client wants to do this it
+can create a python thead and in it call waitEvent.</p>
+<p>Monitor is implemented via easyMonitor.</p>
+<h2>easypva - easypva.cpp</h2>
+<p>I spent a lot of time on this since it was a chance to come up to speed on
+boost::python.
+It has many changes from pvaaccess.cpp.</p>
+<p>Look in particular look at the implementation of class Channel.</p>
+<ul>
+<li>I think it is easier to understand
+then using static_cast for the method definitions.
+This is the class on which I spent a lot of time.</li>
+<li>The doc strings for the Channel class has been changed.
+Take a look and see what You think.</li>
+<li>Only putDouble and putString  have two python names.
+Note that pvaccess.cpp also has two python names for putByte, etc.
+But only the put methods for string and double will be called.</li>
+</ul>
+<h2>examples - new for easypva</h2>
+<p>testEasyPut.py has the changes</p>
+<ul>
+<li>import is from easypva instead of pvaccess</li>
+<li>test for string resets value to original.
+If this is not done and the test is run many times it will fail
+because it is a V3 channel which limits the array length.</li>
+<li>chr and ord are now longer used. Note that use of chr is NOT the same as byte.</li>
+<li>added tests for long and unsigned long</li>
+</ul>
+<p>The other tests are:</p>
+<ul>
+<li>testEasyPvObject.py is identical to testPvObject.py except for import</li>
+<li>testEasyRpcClient.py acceses exampleHelloRPC from test database.</li>
+<li>testEasyMonitor.py accesses new Monitor class.</li>
+<li>testEasyPvObject2.py tests union and arrays.</li>
+<li>testEasyUnion.py accesses union in test database.</li>
+<li>testEasyUnionArray.py accesses union array in test database.</li>
+<li>testEasyVariantUnion.py accesses variant union in test database.</li>
+<li>testEasyVariantUnionArray.py accesses variant union in test database.</li>
+</ul>
+<p>NOTE that the union tests required the latest exampleDatabaseEasyPVA.zip
+from pvDatabaseCPP.</p>

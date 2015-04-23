@@ -7,8 +7,7 @@
 #include "InvalidArgument.h"
 #include "pv/convert.h"
 
-namespace PvUtility 
-{
+namespace epics { namespace pvaPy { namespace PvUtility {
 
 size_t fromString(const epics::pvData::PVScalarArrayPtr& pv, const epics::pvData::StringArray& from, size_t fromStartIndex)
 {
@@ -146,4 +145,4 @@ size_t fromString(const epics::pvData::PVStructurePtr& pvStructure, const epics:
     return processed;
 }
 
-}
+}}}

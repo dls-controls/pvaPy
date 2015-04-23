@@ -1,6 +1,9 @@
 #include "PvAlarm.h"
 #include "PvType.h"
 
+namespace epics { namespace pvaPy {
+
+
 const char* PvAlarm::StructureId("alarm_t");
 
 const char* PvAlarm::SeverityFieldKey("severity");
@@ -82,3 +85,5 @@ std::string PvAlarm::getMessage() const
     return pvStructurePtr->getStringField(MessageFieldKey)->get();
 }
 
+
+}}

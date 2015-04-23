@@ -1,6 +1,9 @@
 #include "epicsStdio.h"
 #include "InvalidState.h"
 
+namespace epics { namespace pvaPy {
+
+
 InvalidState::InvalidState(const std::string& message) :
     PvaException(message)
 {
@@ -16,4 +19,6 @@ InvalidState::InvalidState(const char* message, ...) :
     setMessage(std::string(messageBuffer));
     va_end(messageArgs);
 }
+
+}}
 

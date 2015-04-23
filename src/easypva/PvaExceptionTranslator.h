@@ -3,11 +3,14 @@
 
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 class PvaExceptionTranslator 
 {
 public:
     static void translator(const PvaException& ex);
 };
 
+}}
 #endif
 

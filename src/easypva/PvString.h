@@ -5,6 +5,9 @@
 #include "pv/pvData.h"
 #include "PvScalar.h"
 
+namespace epics { namespace pvaPy {
+
+
 class PvString : public PvScalar
 {
 public:
@@ -18,4 +21,5 @@ private:
     static boost::python::dict createStructureDict();
 };
 
+}}
 #endif

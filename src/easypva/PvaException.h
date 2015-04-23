@@ -6,6 +6,8 @@
 #include <string>
 #include <cstdarg>
 
+namespace epics { namespace pvaPy {
+
 /**
  * Base exception class.
  */
@@ -57,4 +59,5 @@ inline void PvaException::setErrorCode(int errorCode)
     this->errorCode = errorCode;
 }
 
+}}
 #endif 

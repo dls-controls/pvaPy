@@ -4,17 +4,20 @@
 #include "pv/pvData.h"
 #include "PvScalar.h"
 
+namespace epics { namespace pvaPy {
+
 class PvShort : public PvScalar
 {
 public:
     PvShort();
-    PvShort(short s);
+    PvShort(epics::pvData::int16 s);
     virtual ~PvShort();
 
-    void set(short s);
-    short get() const;
+    void set(epics::pvData::int16 s);
+    epics::pvData::int16 get() const;
 private:
     static boost::python::dict createStructureDict();
 };
 
+}}
 #endif

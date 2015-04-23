@@ -2,6 +2,9 @@
 #include "epicsStdio.h"
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
+
 // Constants.
 const int PvaException::MaxMessageLength(1024);
 const int PvaException::GenericErrorCode(1);
@@ -52,3 +55,5 @@ std::ostream& operator<<(std::ostream& out, const PvaException& ex)
     out << ex.error.c_str();
     return out;
 }
+
+}}

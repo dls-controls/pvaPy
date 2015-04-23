@@ -4,6 +4,8 @@
 #include <string>
 #include "PvaException.h"
 
+namespace epics { namespace pvaPy {
+
 /**
  * Invalid argument error.
  */
@@ -14,4 +16,5 @@ public:
     InvalidArgument(const char* message, ...);
 };
 
+}}
 #endif 

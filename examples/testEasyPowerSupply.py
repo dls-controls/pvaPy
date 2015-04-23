@@ -3,6 +3,7 @@
 from easypva import *
 
 c = Channel("examplePowerSupply")
+print c.get("field()")
 pvout =  PvObject({
      "power" : { "value" : DOUBLE},
      "voltage" : { "value" : DOUBLE}

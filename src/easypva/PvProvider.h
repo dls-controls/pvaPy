@@ -3,8 +3,8 @@
 
 #include <string>
 
-namespace PvProvider
-{
+namespace epics { namespace pvaPy { namespace PvProvider {
+
 
 extern const char* PvaProviderName;
 extern const char* CaProviderName;
@@ -17,7 +17,7 @@ enum ProviderType {
 void checkProviderName(const std::string& providerName);
 std::string getProviderName(ProviderType providerType);
 
-}
+}}}
 
 #endif
 
