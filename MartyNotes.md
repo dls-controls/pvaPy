@@ -47,11 +47,13 @@ The exceptions I know about are PvScalar and PyUtility.cpp
 
 I have not had time to think about normativeTypes and RpcServer.
 
+Also support should be developed for channelArray, channelPutGet, and multiChannel.
+
 
 easypva - PyObject
 ------------------
 
-This is quite similar to what is in pvaccess except for:
+This is similar to what is in pvaccess except for:
 
 * namespace is now epics::pvaPy
 * now supports union and unionArray
@@ -96,13 +98,7 @@ The main changes to Channel are:
 
 * Monitor is now handled by class Monitor.
 * Channel now uses easyPVA instead of implementing the channel methods itself.
-* The names for the various types have been changed to reflect the python name.
-For example put(double) is now named putDouble(double)
-
-Channel should be extended to support channelPutGet.
-
-What about channelArray?
-
+* The method names have been changed for the boost::python Channel class in easypva.cpp.
 
 easypva - Monitor
 ------------------
@@ -133,9 +129,9 @@ then using static_cast for the method definitions.
 This is the class on which I spent a lot of time.
 * The doc strings for the Channel class has been changed.
 Take a look and see what You think.
-* Only putDouble and putString  have two python names.
+* Only putObject, putList, putDouble and putString  have two python names.
 Note that pvaccess.cpp also has two python names for putByte, etc.
-But only the put methods for string and double will be called.
+But the put method for all numeric scalar types will always call putDouble.
 
 
 examples - new for easypva

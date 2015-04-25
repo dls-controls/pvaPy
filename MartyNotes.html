@@ -39,8 +39,9 @@ The exceptions I know about are PvScalar and PyUtility.cpp</li>
 <li>PVA_RPC_API_VERSION no longer supported.</li>
 </ul>
 <p>I have not had time to think about normativeTypes and RpcServer.</p>
+<p>Also support should be developed for channelArray, channelPutGet, and multiChannel.</p>
 <h2>easypva - PyObject</h2>
-<p>This is quite similar to what is in pvaccess except for:</p>
+<p>This is similar to what is in pvaccess except for:</p>
 <ul>
 <li>namespace is now epics::pvaPy</li>
 <li>now supports union and unionArray</li>
@@ -80,11 +81,8 @@ The main changes to Channel are:</p>
 <ul>
 <li>Monitor is now handled by class Monitor.</li>
 <li>Channel now uses easyPVA instead of implementing the channel methods itself.</li>
-<li>The names for the various types have been changed to reflect the python name.
-For example put(double) is now named putDouble(double)</li>
+<li>The method names have been changed for the boost::python Channel class in easypva.cpp.</li>
 </ul>
-<p>Channel should be extended to support channelPutGet.</p>
-<p>What about channelArray?</p>
 <h2>easypva - Monitor</h2>
 <p>Instead of being implemented by Channel it is now a separate class.
 To the python client the name is Monitor.
@@ -105,9 +103,9 @@ then using static_cast for the method definitions.
 This is the class on which I spent a lot of time.</li>
 <li>The doc strings for the Channel class has been changed.
 Take a look and see what You think.</li>
-<li>Only putDouble and putString  have two python names.
+<li>Only putObject, putList, putDouble and putString  have two python names.
 Note that pvaccess.cpp also has two python names for putByte, etc.
-But only the put methods for string and double will be called.</li>
+But the put method for all numeric scalar types will always call putDouble.</li>
 </ul>
 <h2>examples - new for easypva</h2>
 <p>testEasyPut.py has the changes</p>

@@ -165,6 +165,21 @@ c.put(value)
 newValue = c.get().getLong()
 print 'Got new value: ', newValue
 assert newValue == value
+value = 100000000000
+print 'Putting value via putLong(): ', value
+c.putLong(value)
+newValue = c.get().getLong()
+print 'Got new value: ', newValue
+assert newValue == value
+value = 200000000000
+print 'Putting value via put(): ', value
+c.putLong(value)
+newValue = c.get().getLong()
+print 'Got new value: ', newValue
+assert newValue == value
+c.put(1)
+
+
 
 print
 print '****************************'

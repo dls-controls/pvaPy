@@ -983,36 +983,6 @@ BOOST_PYTHON_MODULE(easypva)
 
 
     // Channel
-    PvObject* (Channel::*get_request)(const std::string&) = &Channel::get;
-    PvObject* (Channel::*get_default)() = &Channel::get;
-    void (Channel::*put_obj_request)(const PvObject&,const std::string&) = &Channel::put;
-    void (Channel::*put_obj)(const PvObject&) = &Channel::put;
-    void (Channel::*put_string_request)(const std::string&,const std::string&) = &Channel::putString;
-    void (Channel::*put_string)(const std::string&) = &Channel::putString;
-    void (Channel::*put_list_request)(const boost::python::list&,const std::string&) = &Channel::put;
-    void (Channel::*put_list)(const boost::python::list&) = &Channel::put;
-    void (Channel::*put_bool)(bool) = &Channel::putBoolean;
-    void (Channel::*put_bool_request)(bool,const std::string&) = &Channel::putBoolean;
-    void (Channel::*put_byte)(int8) = &Channel::putByte;
-    void (Channel::*put_byte_request)(int8,const std::string&) = &Channel::putByte;
-    void (Channel::*put_ubyte)(uint8) = &Channel::putUByte;
-    void (Channel::*put_ubyte_request)(uint8,const std::string&) = &Channel::putUByte;
-    void (Channel::*put_short)(short) = &Channel::putShort;
-    void (Channel::*put_short_request)(short,const std::string&) = &Channel::putShort;
-    void (Channel::*put_ushort)(uint16) = &Channel::putUShort;
-    void (Channel::*put_ushort_request)(uint16,const std::string&) = &Channel::putUShort;
-    void (Channel::*put_int)(int) = &Channel::putInt;
-    void (Channel::*put_int_request)(int,const std::string&) = &Channel::putInt;
-    void (Channel::*put_uint)(uint32) = &Channel::putUInt;
-    void (Channel::*put_uint_request)(uint32,const std::string&) = &Channel::putUInt;
-    void (Channel::*put_long)(int64) = &Channel::putLong;
-    void (Channel::*put_long_request)(int64,const std::string&) = &Channel::putLong;
-    void (Channel::*put_ulong)(uint64) = &Channel::putULong;
-    void (Channel::*put_ulong_request)(uint64,const std::string&) = &Channel::putULong;
-    void (Channel::*put_float)(float) = &Channel::putFloat;
-    void (Channel::*put_float_request)(float,const std::string&) = &Channel::putFloat;
-    void (Channel::*put_double)(double) = &Channel::putDouble;
-    void (Channel::*put_double_request)(double,const std::string&) = &Channel::putDouble;
 
     class_<Channel>("Channel",
              "Channel\n"
@@ -1031,7 +1001,21 @@ BOOST_PYTHON_MODULE(easypva)
         .def(init<std::string>())
         .def(init<std::string, std::string>())
 
-        .def("get",get_request,
+        .def("getObject", &Channel::getObject,
+            (arg("value"),arg("result") = "value"),
+            return_value_policy<manage_new_object>(),
+             "get data from the channel via a request string\n\n"
+             "arg\n"
+             "    request - a string describing the desired field\n"
+             "        an example is 'value,alarm.timeStamp'\n\n"
+             "return - A PvObject\n\n"
+             "example\n"
+             "    channel = Channel('enum01')\n"
+             "    pv = channel.get('field(value.index)')\n"
+             "    print pv\n"
+             )
+        .def("get", &Channel::getObject,
+            (arg("value"),arg("result") = "value"),
             return_value_policy<manage_new_object>(),
              "get data from the channel via a request string\n\n"
              "arg\n"
@@ -1044,17 +1028,19 @@ BOOST_PYTHON_MODULE(easypva)
              "    print pv\n"
              )
 
-        .def("get", get_default,
-            return_value_policy<manage_new_object>(),
-             "get data from the channel with request = 'value'\n\n"
-             "return - A PvObject\n\n"
-             "example\n"
-             "    channel = Channel('double01')\n"
-             "    pv = channel.get()\n"
-             "    print pv\n"
-             )
 
-        .def("put", put_obj_request,
+        .def("putObject", &Channel::putObject,
+            (arg("value"),arg("result") = "value"),
+             "put data to the channel via a PvObject.\n\n"
+             "arg\n"
+             "    pvobject - a PvObject\n"
+             "    request - a string describing the desired field\n"
+             "example\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put(PvInt(1), 'field(value.index)')\n\n"
+             )
+        .def("put", &Channel::putObject,
+            (arg("value"),arg("result") = "value"),
              "put data to the channel via a PvObject.\n\n"
              "arg\n"
              "    pvobject - a PvObject\n"
@@ -1064,16 +1050,20 @@ BOOST_PYTHON_MODULE(easypva)
              "    channel.put(PvInt(1), 'field(value.index)')\n\n"
              )
 
-        .def("put", put_obj,
-             "put data to the channel via a PvObject.\n\n"
+
+        .def("putString", &Channel::putString,
+            (arg("value"),arg("result") = "value"),
+             "put data to the channel via a string.\n\n"
              "arg\n"
-             "    pvobject - a PvObject\n"
+             "    value - string\n"
+             "    request - a string describing the desired field\n"
              "example\n"
-             "    channel = Channel('double')\n\n"
-             "    channel.put(PvDouble(1.0))\n\n"
+             "    channel = Channel('enum01')\n\n"
+             "    channel.put('new value', 'field(value.index)')\n\n"
              )
 
-        .def("putString", put_string_request,
+        .def("put", &Channel::putString,
+            (arg("value"),arg("result") = "value"),
              "put data to the channel via a string.\n\n"
              "arg\n"
              "    value - string\n"
@@ -1081,194 +1071,114 @@ BOOST_PYTHON_MODULE(easypva)
              "example\n"
              "    channel = Channel('enum01')\n\n"
              "    channel.put('new value', 'field(value.index)')\n\n"
-             )
-        .def("put", put_string_request,
-             "put data to the channel via a string.\n\n"
-             "arg\n"
-             "    value - string\n"
-             "    request - a string describing the desired field\n"
-             "example\n"
-             "    channel = Channel('enum01')\n\n"
-             "    channel.put('new value', 'field(value.index)')\n\n"
-             )
-        .def("putString", put_string,
-             "put data to the channel via a string.\n\n"
-             "arg\n"
-             "    value - string\n"
-             "    request - a string describing the desired field\n"
-             "example\n"
-             "    channel = Channel('enum01')\n\n"
-             "    channel.put('new value', 'field(value.index)')\n\n"
-             )
-        .def("put", put_string,
-             "put data to the channel via a string.\n\n"
-             "arg\n"
-             "    value - string\n"
-             "    request - a string describing the desired field\n"
-             "example\n"
-             "    channel = Channel('enum01')\n\n"
-             "    channel.put('new value', 'field(value.index)')\n\n"
-             )
-        .def("putScalarArray", put_list_request,
-             "put data to an array channel via a list.\n\n"
-             "arg\n"
-             "    value - list\n"
-             "    request - a string describing the desired field\n"
-             )
-        .def("put", put_list_request,
-             "put data to an array channel via a list.\n\n"
-             "arg\n"
-             "    value - list\n"
-             "    request - a string describing the desired field\n"
-             )
-        .def("putScalarArray", put_list,
-             "put data to an array channel via a list.\n\n"
-             "arg\n"
-             "    value - list\n"
-             )
-        .def("put", put_list,
-             "put data to an array channel via a list.\n\n"
-             "arg\n"
-             "    value - list\n"
              )
 
-        .def("putBoolean", put_bool_request,
+
+        .def("putScalarArray", &Channel::putList,
+            (arg("value"),arg("result") = "value"),
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             "    request - a string describing the desired field\n"
+             )
+        .def("put", &Channel::putList,
+            (arg("value"),arg("result") = "value"),
+             "put data to an array channel via a list.\n\n"
+             "arg\n"
+             "    value - list\n"
+             "    request - a string describing the desired field\n"
+             )
+
+
+        .def("putBoolean", &Channel::putBoolean,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via a boolean.\n\n"
              "arg\n"
              "    value - True or False\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putBoolean", put_bool,
-             "put data to a channel via a boolean.\n\n"
-             "arg\n"
-             "    value - True or False\n"
-             )
 
-        .def("putByte", put_byte_request,
+        .def("putByte", &Channel::putByte,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an 8 bit integer.\n\n"
              "arg\n"
              "    value - an 8 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putByte", put_byte,
-             "put data to a channel via an 8 bit integer.\n\n"
-             "arg\n"
-             "    value - an 8 bit integer\n"
-             )
 
-        .def("putUByte", put_ubyte_request,
+        .def("putUByte", &Channel::putUByte,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an unsigned 8 bit integer.\n\n"
              "arg\n"
              "    value - an unsigned 8 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putUByte", put_ubyte,
-             "put data to a channel via an unsigned 8 bit integer.\n\n"
-             "arg\n"
-             "    value - an unsigned 8 bit integer\n"
-             )
 
-        .def("putShort", put_short_request,
+        .def("putShort", &Channel::putShort,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an 16 bit integer.\n\n"
              "arg\n"
-             "    value - an 16 bit integer\n"
+             "    value - &Channel::putan 16 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putShort", put_short,
-             "put data to a channel via an 16 bit integer.\n\n"
-             "arg\n"
-             "    value - an 16 bit integer\n"
-             )
-        .def("putUShort", put_ushort_request,
+
+        .def("putUShort", &Channel::putUShort,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an unsigned 16 bit integer.\n\n"
              "arg\n"
              "    value - an unsigned 16 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putUShort", put_ushort,
-             "put data to a channel via an unsigned 16 bit integer.\n\n"
-             "arg\n"
-             "    value - an unsigned 16 bit integer\n"
-             )
 
-        .def("putInt", put_int_request,
+        .def("putInt", &Channel::putInt,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an 32 bit integer.\n\n"
              "arg\n"
              "    value - an 32 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putInt", put_int,
-             "put data to a channel via a32 bit integer.\n\n"
-             "arg\n"
-             "    value - a32 bit integer\n"
-             )
 
-        .def("putUInt", put_uint_request,
+        .def("putUInt", &Channel::putUInt,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an unsigned 32 bit integer.\n\n"
              "arg\n"
              "    value - an unsigned 32 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putUInt", put_uint,
-             "put data to a channel via an unsigned 32 bit integer.\n\n"
-             "arg\n"
-             "    value - an unsigned 32 bit integer\n"
-             )
 
-        .def("putLong", put_long_request,
+        .def("putLong", &Channel::putLong,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via a 64 bit integer.\n\n"
              "arg\n"
              "    value - an 64 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putLong", put_long,
-             "put data to a channel via a 64 bit integer.\n\n"
-             "arg\n"
-             "    value - an 64 bit integer\n"
-             )
 
-        .def("putULong", put_ulong_request,
+        .def("putULong", &Channel::putULong,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via an unsigned 64 bit integer.\n\n"
              "arg\n"
              "    value - an unsigned 64 bit integer\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putULong", put_ulong,
-             "put data to a channel via an unsigned 64 bit integer.\n\n"
-             "arg\n"
-             "    value - an unsigned 64 bit integer\n"
-             )
 
-        .def("putFloat", put_float_request,
+        .def("putFloat", &Channel::putFloat,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via a float.\n\n"
              "arg\n"
              "    value - a float\n"
              "    request - a string describing the desired field\n"
              )
-        .def("putFloat", put_float,
-             "put data to a channel via a float.\n\n"
+
+        .def("putDouble", &Channel::putDouble,
+            (arg("value"),arg("result") = "value"),
+             "put data to a channel via a double.\n\n"
              "arg\n"
-             "    value - a float\n"
+             "    value - a double\n"
              )
 
-        .def("putDouble", put_double_request,
-             "put data to a channel via a double.\n\n"
-             "arg\n"
-             "    value - a double\n"
-             "    request - a string describing the desired field\n"
-             )
-        .def("putDouble", put_double,
-             "put data to a channel via a double.\n\n"
-             "arg\n"
-             "    value - a double\n"
-             )
-        .def("put", put_double_request,
-             "put data to a channel via a double.\n\n"
-             "arg\n"
-             "    value - a double\n"
-             "    request - a string describing the desired field\n"
-             )
-        .def("put", put_double,
+        .def("put", &Channel::putDouble,
+            (arg("value"),arg("result") = "value"),
              "put data to a channel via a double.\n\n"
              "arg\n"
              "    value - a double\n"

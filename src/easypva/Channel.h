@@ -18,44 +18,28 @@ class Channel
 {
 public:
 
-    static const char* DefaultRequestDescriptor;
+    static const char* DefaultRequest;
     static const double DefaultTimeout;
         
     Channel(const std::string& channelName, const std::string& providerName = "pva");
     ~Channel();
 
     std::string getName() const;
-    PvObject* get(const std::string& requestDescriptor);
-    PvObject* get();
-    void put(const PvObject& pvObject, const std::string& requestDescriptor);
-    void put(const PvObject& pvObject);
-    void put(const boost::python::list& pyList, const std::string& requestDescriptor);
-    void put(const boost::python::list& pyList);
-
-    void putString(const std::string& value, const std::string& requestDescriptor);
-    void putString(const std::string& value);
-    void putBoolean(bool value, const std::string& requestDescriptor);
-    void putBoolean(bool value);
-    void putByte(epics::pvData::int8 value, const std::string& requestDescriptor);
-    void putByte(epics::pvData::int8 value);
-    void putUByte(epics::pvData::uint8 value, const std::string& requestDescriptor);
-    void putUByte(epics::pvData::uint8 value);
-    void putShort(epics::pvData::int16 value, const std::string& requestDescriptor);
-    void putShort(epics::pvData::int16 value);
-    void putUShort(epics::pvData::uint16 value, const std::string& requestDescriptor);
-    void putUShort(epics::pvData::uint16 value);
-    void putInt(epics::pvData::int32 value, const std::string& requestDescriptor);
-    void putInt(epics::pvData::int32 value);
-    void putUInt(epics::pvData::uint32 value, const std::string& requestDescriptor);
-    void putUInt(epics::pvData::uint32 value);
-    void putLong(epics::pvData::int64 value, const std::string& requestDescriptor);
-    void putLong(epics::pvData::int64 value);
-    void putULong(epics::pvData::uint64 value, const std::string& requestDescriptor);
-    void putULong(epics::pvData::uint64 value);
-    void putFloat(float value, const std::string& requestDescriptor);
-    void putFloat(float value);
-    void putDouble(double value, const std::string& requestDescriptor);
-    void putDouble(double value);
+    PvObject* getObject(const std::string& request);
+    void putObject(const PvObject& pvObject, const std::string& request);
+    void putList(const boost::python::list& pyList, const std::string& request);
+    void putString(const std::string& value, const std::string& request);
+    void putBoolean(bool value, const std::string& request);
+    void putByte(epics::pvData::int8 value, const std::string& request);
+    void putUByte(epics::pvData::uint8 value, const std::string& request);
+    void putShort(epics::pvData::int16 value, const std::string& request);
+    void putUShort(epics::pvData::uint16 value, const std::string& request);
+    void putInt(epics::pvData::int32 value, const std::string& request);
+    void putUInt(epics::pvData::uint32 value, const std::string& request);
+    void putLong(epics::pvData::int64 value, const std::string& request);
+    void putULong(epics::pvData::uint64 value, const std::string& request);
+    void putFloat(float value, const std::string& request);
+    void putDouble(double value, const std::string& request);
 
     void setTimeout(double timeout);
     double getTimeout() const;
@@ -65,7 +49,7 @@ public:
 private:
     void put(
         const std::vector<std::string>& values,
-        const std::string& requestDescriptor);
+        const std::string& request);
     void put(const std::vector<std::string>& values);
     static PvaPyLogger logger;
     static epics::easyPVA::EasyPVAPtr easyPVA;
