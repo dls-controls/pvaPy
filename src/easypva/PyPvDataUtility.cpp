@@ -1,5 +1,6 @@
 #include "PyPvDataUtility.h"
 #include "PvType.h"
+#include "Union.h"
 #include "FieldNotFound.h"
 #include "InvalidDataType.h"
 #include <pv/pvAccess.h>
@@ -636,7 +637,8 @@ void structureToPyDict(const PVStructurePtr& pvStructurePtr, boost::python::dict
                 break;
             }
             case union_: {
-                addUnionFieldToDict(fieldName, pvStructurePtr, pyDict);
+                PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(fieldName);
+                addUnionFieldToDict(fieldName,pvStructurePtr , pyDict);
                 break;
             }
             case unionArray: {
@@ -767,10 +769,26 @@ void addStructureArrayFieldToDict(const std::string& fieldName, const PVStructur
 //
 // Add PV Union => PY {}
 // 
-void addUnionFieldToDict(const std::string& fieldName, const PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict)
+void addUnionFieldToDict(
+        const std::string& fieldName,const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict)
 {
+    PVUnionPtr pvUnion = pvStructurePtr->getSubField<PVUnion>(fieldName);
+    PVStructurePtr pvTop;
+    PVFieldPtr pvField = pvUnion->get();
+    if(pvField) {
+        StructureConstPtr top = getFieldCreate()->createFieldBuilder()->
+                add("value",pvField->getField()) ->
+                createStructure();
+        pvTop = getPVDataCreate()->createPVStructure(top);
+        pvTop->getSubField("value")->copy(*pvField);
+    } else {
+        pvTop = getPVDataCreate()->createPVStructure(getFieldCreate()->createStructure());
+    }
     boost::python::dict pyDict2;
-    throw PvaException("addUnionFieldToDict not implemented");
+    structureToPyDict( pvTop, pyDict2);
+    boost::python::dict pyDict3;
+    pyDict3["union"] = pyDict2;
+    pyDict[fieldName] = pyDict3;
 }
 
 //
@@ -778,8 +796,24 @@ void addUnionFieldToDict(const std::string& fieldName, const PVStructurePtr& pvS
 // 
 void addUnionArrayFieldToDict(const std::string& fieldName, const PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict) 
 {
+    PVUnionArrayPtr pvUnionArray = pvStructurePtr->getSubField<PVUnionArray>(fieldName);
+    shared_vector<const PVUnionPtr> sharedValues = pvUnionArray->view();
     boost::python::list pyList;
-    throw PvaException("addUnionArrayFieldToDict not implemented");
+    for(size_t i=0 ; i<sharedValues.size(); ++i) {
+        PVFieldPtr pvField = sharedValues[i]->get();
+
+        PVStructurePtr pvs = getPVDataCreate()->createPVStructure(
+            getFieldCreate()->createFieldBuilder()->
+                add("value",pvField->getField()) ->
+                createStructure());
+        pvs->getSubField("value")->copy(*pvField);
+        boost::python::dict pyDict;
+        structureToPyDict(pvs, pyDict);
+        pyList.append(pyDict);
+    }
+    boost::python::dict pyDict2;
+    pyDict2["[union]"] = pyList;
+    pyDict[fieldName] = pyDict2;
 }
 
 //
@@ -825,8 +859,12 @@ void structureToPyDict(const StructureConstPtr& structurePtr, boost::python::dic
                 break;
             }
             case union_: {
+                pyDict[fieldName] = "union";
+                break;
             }
             case unionArray: {
+                pyDict[fieldName] = "[union]";
+                break;
             }
             default: {
                 throw PvaException("Unrecognized field type: %d", type);

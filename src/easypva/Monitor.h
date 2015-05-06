@@ -14,16 +14,16 @@
 
 namespace epics { namespace pvaPy {
 
-class PVAPYMonitor;
-typedef std::tr1::shared_ptr<PVAPYMonitor> PVAPYMonitorPtr;
+class Monitor;
+typedef std::tr1::shared_ptr<Monitor> MonitorPtr;
 
-class PVAPYMonitor
+class Monitor
 {
 public:
-    PVAPYMonitor(const Channel &channel);
-    PVAPYMonitor(const Channel &channel,const std::string & request);
-    PVAPYMonitor(const Channel &channel,const std::string & request,bool autoStart);
-    ~PVAPYMonitor();
+    Monitor(const Channel &channel);
+    Monitor(const Channel &channel,const std::string & request);
+    Monitor(const Channel &channel,const std::string & request,bool autoStart);
+    ~Monitor();
     void start();
     void stop();
     bool waitEvent(double secondsToWait = 0.0);

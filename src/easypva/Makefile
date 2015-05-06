@@ -18,8 +18,9 @@ CXXFLAGS += -g  -I$(BOOST_DIR)/include $(PVA_PY_CPPFLAGS)
 LDFLAGS += $(PVA_PY_LDFLAGS)
 
 
+easypva_SRCS += Union.cpp
 easypva_SRCS += Channel.cpp
-easypva_SRCS += PVAPYMonitor.cpp
+easypva_SRCS += Monitor.cpp
 easypva_SRCS += ChannelTimeout.cpp
 easypva_SRCS += FieldNotFound.cpp
 easypva_SRCS += InvalidArgument.cpp

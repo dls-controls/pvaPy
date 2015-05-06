@@ -6,7 +6,7 @@
 #include "InvalidRequest.h"
 #include "InvalidDataType.h"
 #include "InvalidArgument.h"
-#include "PVAPYMonitor.h"
+#include "Monitor.h"
 #include "boost/python/object.hpp"
 #include "boost/python/tuple.hpp"
 #include "boost/python/extract.hpp"
@@ -19,7 +19,7 @@ using namespace std;
 
 namespace epics { namespace pvaPy {
 
-PVAPYMonitor::PVAPYMonitor(const Channel &channel)
+Monitor::Monitor(const Channel &channel)
 : easyPVA(channel.getEasyPVA()),
   easyChannel(channel.getEasyChannel())
 {
@@ -33,7 +33,7 @@ PVAPYMonitor::PVAPYMonitor(const Channel &channel)
     start();
 }
 
-PVAPYMonitor::PVAPYMonitor(const Channel &channel,const std::string & request)
+Monitor::Monitor(const Channel &channel,const std::string & request)
 : easyPVA(channel.getEasyPVA()),
   easyChannel(channel.getEasyChannel())
 {
@@ -47,7 +47,7 @@ PVAPYMonitor::PVAPYMonitor(const Channel &channel,const std::string & request)
     start();
 }
 
-PVAPYMonitor::PVAPYMonitor(const Channel &channel,const std::string & request,bool autoStart)
+Monitor::Monitor(const Channel &channel,const std::string & request,bool autoStart)
 : easyPVA(channel.getEasyPVA()),
   easyChannel(channel.getEasyChannel())
 {
@@ -62,7 +62,7 @@ PVAPYMonitor::PVAPYMonitor(const Channel &channel,const std::string & request,bo
 }
 
 
-PVAPYMonitor::~PVAPYMonitor()
+Monitor::~Monitor()
 {
     if(easyMonitor) easyMonitor->stop();
     easyMonitor.reset();
@@ -70,7 +70,7 @@ PVAPYMonitor::~PVAPYMonitor()
     easyPVA.reset();
 }
 
-void PVAPYMonitor::start()
+void Monitor::start()
 {
     try {
         easyMonitor->start();
@@ -80,7 +80,7 @@ void PVAPYMonitor::start()
     }
 }
 
-void PVAPYMonitor::stop()
+void Monitor::stop()
 {
     try {
         easyMonitor->stop();
@@ -90,7 +90,7 @@ void PVAPYMonitor::stop()
     }
 }
 
-bool PVAPYMonitor::waitEvent(double secondsToWait)
+bool Monitor::waitEvent(double secondsToWait)
 {
     try {
         return easyMonitor->waitEvent(secondsToWait);
@@ -100,7 +100,7 @@ bool PVAPYMonitor::waitEvent(double secondsToWait)
     }
 }
 
-bool PVAPYMonitor::poll()
+bool Monitor::poll()
 {
     try {
         return easyMonitor->poll();
@@ -110,7 +110,7 @@ bool PVAPYMonitor::poll()
     }
 }
 
-PvObject* PVAPYMonitor::getData()
+PvObject* Monitor::getData()
 {
     try {
         PvObject* response = new PvObject(easyMonitor->getData()->getPVStructure());
@@ -121,7 +121,7 @@ PvObject* PVAPYMonitor::getData()
     }
 }
 
-void PVAPYMonitor::releaseEvent()
+void Monitor::releaseEvent()
 {
     try {
         easyMonitor->releaseEvent();

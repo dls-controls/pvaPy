@@ -17,3 +17,4 @@ tools/autoconf/missing
 tools/autoconf/aclocal.m4
 tools/autoconf/configure
 tools/autoconf/install-sh
+pvp*

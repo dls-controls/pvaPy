@@ -3,6 +3,7 @@
 
 #include <string>
 #include "pv/pvData.h"
+#include "Union.h"
 #include "boost/python/str.hpp"
 #include "boost/python/extract.hpp"
 #include "boost/python/object.hpp"
@@ -163,12 +164,18 @@ void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::
 //
 // Add PV Structure Array => PY {}
 // 
-void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict);
+void addStructureArrayFieldToDict(
+        const std::string& fieldName,
+        const epics::pvData::PVStructurePtr& pvStructurePtr,
+        boost::python::dict& pyDict);
 
 //
 // Add PV Union => PY {}
 // 
-void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict);
+void addUnionFieldToDict(
+        const std::string& fieldName,
+        const epics::pvData::PVStructurePtr& pvStructurePtr,
+        boost::python::dict& pyDict);
 
 //
 // Add PV Union Array => PY {}

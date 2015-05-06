@@ -13,9 +13,10 @@
 #include "boost/python/docstring_options.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/operators.hpp"
+#include "boost/python/make_constructor.hpp"
 
 #include "PvObject.h"
-#include "PVAPYMonitor.h"
+#include "Monitor.h"
 #include "PvProvider.h"
 #include "PvScalar.h"
 #include "PvType.h"
@@ -39,6 +40,7 @@
 #include "NtType.h"
 
 #include "Channel.h"
+#include "Union.h"
 #include "RpcClient.h"
 #include "PvaException.h"
 #include "PvaExceptionTranslator.h"
@@ -95,6 +97,22 @@ BOOST_PYTHON_MODULE(easypva)
         .value("STRING", PvType::String)
         .export_values()
         ;
+
+    //
+    // Union
+    //
+    class_<epics::pvaPy::Union>("Union",
+          "Class for Union.\n"
+          "   It allows a python client to create a union or union array field."
+          "    For example:\n"
+          "        union = Union()\n"
+          "        pv = PvObject({ 'value' : union})\n"
+          "        pvarray = PvObject({ 'value' : [union]})\npr"
+          "\n",
+              init<>())
+          .def(init<PvObject>(args("pvObject")))
+          .def(str(self))
+     ;
 
     //
     // PvObject
@@ -585,6 +603,7 @@ BOOST_PYTHON_MODULE(easypva)
         .def("__float__", &PvScalar::toDouble)   
         .def("__str__", &PvScalar::toString)   
         ;
+
 
     //
     // PV Boolean
@@ -1198,7 +1217,7 @@ BOOST_PYTHON_MODULE(easypva)
         ;
 
         // Monitor
-        class_<PVAPYMonitor>("Monitor",
+        class_<epics::pvaPy::Monitor>("Monitor",
              "Monitor\n"
              "=======\n\n"
              "Provides access to easyMonitor\n\n"
@@ -1217,13 +1236,13 @@ BOOST_PYTHON_MODULE(easypva)
 
         .def(init<Channel,std::string>())
         .def(init<Channel,std::string,bool>())
-        .def("start",&PVAPYMonitor::start,
+        .def("start",&epics::pvaPy::Monitor::start,
             "start listening for monitors\n"
             "")
-        .def("stop",&PVAPYMonitor::stop,
+        .def("stop",&epics::pvaPy::Monitor::stop,
             "stop listening for monitors\n"
             "")
-        .def("waitEvent",&PVAPYMonitor::waitEvent,
+        .def("waitEvent",&epics::pvaPy::Monitor::waitEvent,
             args("secondsToWait"),
             (arg("secondsToWait") = 0.0),
             "wait for a monitor event\n\n"
@@ -1233,18 +1252,18 @@ BOOST_PYTHON_MODULE(easypva)
             "return - True of False\n"
             "   If True then getData can be called.\n"
             "")
-        .def("getData", &PVAPYMonitor::getData, 
+        .def("getData", &epics::pvaPy::Monitor::getData,
             return_value_policy<manage_new_object>(),
             "get the data for the last sucessful waitEvent or poll\n"
             "return - True of False\n"
             "   If True then getData can be called.\n"
             "")
-        .def("poll",&PVAPYMonitor::poll,
+        .def("poll",&epics::pvaPy::Monitor::poll,
             "poll for a new event\n\n"
             "return - True of False\n"
             "   If True then getData can be called.\n"
             "")
-        .def("releaseEvent",&PVAPYMonitor::releaseEvent,
+        .def("releaseEvent",&epics::pvaPy::Monitor::releaseEvent,
             "release the event returned by the last poll or waitEvent\n"
             "   this must be called before again calling poll or waitEvent\n\n"
             "")

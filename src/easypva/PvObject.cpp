@@ -1,5 +1,6 @@
 #include "PvObject.h"
 #include "PvType.h"
+#include "Union.h"
 #include "PvaException.h"
 #include "PyPvDataUtility.h"
 #include "StringUtility.h"
@@ -609,10 +610,16 @@ epics::pvData::StructureConstPtr PvObject::createStructureFromDict(const boost::
                     addStructureArrayField(fieldName, pyDict2, fields, names);
                     continue;
                 }
-                else {
-                    // Invalid request.
-                    throw InvalidArgument("Unrecognized list type for field name %s", fieldName.c_str());
+                // Check for Union
+                boost::python::extract<Union> pvUnionExtract(pyList[0]);
+                if(pvUnionExtract.check()) {
+                    Union u = pvUnionExtract();
+                    fields.push_back(getFieldCreate()->createUnionArray(u.getUnion()));
+                    names.push_back(fieldName);
+                    continue;
                 }
+                // Invalid request.
+                throw InvalidArgument("Unrecognized list type for field name %s", fieldName.c_str());
             }
             continue;
         } 
@@ -621,101 +628,22 @@ epics::pvData::StructureConstPtr PvObject::createStructureFromDict(const boost::
         boost::python::extract<boost::python::dict> dictExtract(valueObject);
         if (dictExtract.check()) {
             boost::python::dict pyDict2 = dictExtract();
-            boost::python::list fieldNames = pyDict2.keys();
-            if(boost::python::len(fieldNames)==1) {
-                boost::python::object fieldNameObject = fieldNames[0];
-                boost::python::extract<std::string> fieldNameExtract(fieldNameObject);
-                if(fieldNameExtract.check()) {
-                    string name = fieldNameExtract();
-                    if(name=="UNION") {
-                       boost::python::object valueObject = pyDict2[fieldNameObject];
-                       if(valueObject.is_none()) {
-                           fields.push_back(getFieldCreate()->createVariantUnion());
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
-                       if(pvObjectExtract.check()) {
-                           PvObject pv = pvObjectExtract();
-                           StructureConstPtr s = pv.getStructurePtr();
-                           FieldConstPtrArray f = s->getFields();
-                           StringArray n = s->getFieldNames();
-                           fields.push_back(getFieldCreate()->createUnion(n,f));
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                    }
-                    if(name=="[UNION]") {
-                       boost::python::object valueObject = pyDict2[fieldNameObject];
-                       if(valueObject.is_none()) {
-                           fields.push_back(getFieldCreate()->createVariantUnionArray());
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
-                       if(pvObjectExtract.check()) {
-                           PvObject pv = pvObjectExtract();
-                           StructureConstPtr s = pv.getStructurePtr();
-                           FieldConstPtrArray f = s->getFields();
-                           StringArray n = s->getFieldNames();
-                           UnionConstPtr u = getFieldCreate()->createUnion(n,f);
-                           fields.push_back(getFieldCreate()->createUnionArray(u));
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                    }
-                    if(name=="STRUCTURE") {
-                       boost::python::object valueObject = pyDict2[fieldNameObject];
-                       boost::python::extract<std::string> stringExtract(valueObject);
-                       if(stringExtract.check()) {
-                           string name = stringExtract();
-                           if(name=="alarm") {
-                               fields.push_back(getStandardField()->alarm());
-                               names.push_back(fieldName);
-                               continue;
-                           }
-                           if(name== "timeStamp") {
-                               fields.push_back(getStandardField()->timeStamp());
-                               names.push_back(fieldName);
-                               continue;
-                           }
-                           if(name== "display") {
-                               fields.push_back(getStandardField()->display());
-                               names.push_back(fieldName);
-                               continue;
-                           }
-                           if(name== "control") {
-                               fields.push_back(getStandardField()->control());
-                               names.push_back(fieldName);
-                               continue;
-                           }
-                       }
-                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
-                       if(pvObjectExtract.check()) {
-                           PvObject pv = pvObjectExtract();
-                           fields.push_back(pv.getStructurePtr());
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                    }
-                    if(name=="[STRUCTURE]") {
-                       boost::python::object valueObject = pyDict2[fieldNameObject];
-                       boost::python::extract<std::string> stringExtract(valueObject);
-                       boost::python::extract<PvObject> pvObjectExtract(valueObject);
-                       if(pvObjectExtract.check()) {
-                           PvObject pv = pvObjectExtract();
-                           fields.push_back(getFieldCreate()->createStructureArray(pv.getPvStructurePtr()->getStructure()));
-                           names.push_back(fieldName);
-                           continue;
-                       }
-                    }
-                }
-            }
             int dictSize = boost::python::len(pyDict2);
             if (!dictSize) {
-                throw InvalidArgument("PV type dict provided for field name %s must be non-empty.", fieldName.c_str());
+                throw InvalidArgument("PV type dict provided for field name %s"
+                     " must be non-empty.", fieldName.c_str());
             }
             addStructureField(fieldName, pyDict2, fields, names);
+            continue;
+
+        }
+
+        // Check for Union
+        boost::python::extract<Union> pvUnionExtract(valueObject);
+        if(pvUnionExtract.check()) {
+            Union u = pvUnionExtract();
+            fields.push_back(u.getUnion());
+            names.push_back(fieldName);
             continue;
         }
 
