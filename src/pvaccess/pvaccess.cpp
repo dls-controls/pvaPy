@@ -45,8 +45,10 @@ void wrapNtType();
 void wrapNtTable();
 
 void wrapChannel();
+void wrapEndpoint();
 void wrapRpcServer();
 void wrapRpcClient();
+void wrapPvaServer();
 
 // Exceptions
 PyObject* pvaException = NULL;
@@ -99,6 +101,8 @@ BOOST_PYTHON_MODULE(pvaccess)
     wrapNtTable();
 
     wrapChannel();
+    wrapEndpoint();
     wrapRpcClient();
-    wrapRpcServer(); 
+    wrapRpcServer();
+    wrapPvaServer();
 }

@@ -73,6 +73,10 @@ AC_DEFUN([AX_EPICS4],
     if ! test -d "$pvaccesscpp_dir"; then
         pvaccesscpp_dir="$ac_epics4_dir_path"
     fi
+    pvlocalcpp_dir="$ac_epics4_dir_path/pvLocalCPP"
+    if ! test -d "$pvlocalcpp_dir"; then
+        pvlocalcpp_dir="$ac_epics4_dir_path"
+    fi
     normativetypescpp_dir="$ac_epics4_dir_path/normativeTypesCPP"
     if ! test -d "$normativetypescpp_dir"; then
         normativetypescpp_dir="$ac_epics4_dir_path"
@@ -192,6 +196,7 @@ AC_DEFUN([AX_EPICS4],
         AC_SUBST(EPICS4_DIR)
         AC_SUBST(PVDATACPP_DIR, $pvdatacpp_dir)
         AC_SUBST(PVACCESSCPP_DIR, $pvaccesscpp_dir)
+        AC_SUBST(PVLOCALCPP_DIR, $pvlocalcpp_dir)
     fi
 
     export CPPFLAGS="$PVA_CPPFLAGS $EPICS_CPPFLAGS"

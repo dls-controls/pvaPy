@@ -135,6 +135,7 @@ AC_DEFUN([AX_PVA_PY],
 
     # create RELEASE.local
     echo "PVACLIENT = $PVACLIENTCPP_DIR" >> $release_local
+    echo "PVLOCAL = $PVLOCALCPP_DIR" >> $release_local
     echo "PVACCESS = $PVACCESSCPP_DIR" >> $release_local
     echo "NORMATIVETYPES = $NORMATIVETYPESCPP_DIR" >> $release_local
     echo "PVDATA = $PVDATACPP_DIR" >> $release_local

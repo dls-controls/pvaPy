@@ -5,6 +5,7 @@ include/
 config.log
 configure/*.local
 **/O.*
+**/*/O.*
 tools/autoconf/install-sh
 tools/autoconf/missing
 tools/autoconf/config.status
