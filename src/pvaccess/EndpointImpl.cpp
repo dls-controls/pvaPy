@@ -18,11 +18,17 @@ epics::pvLocal::GetService::shared_pointer EndpointGetImpl::getGetService(epics:
     if (m_pyGet)
     {
         PvObject pyRequest(pvRequest);
+
+        PyGilManager::gilStateEnsure();
+
         boost::python::object pyObject = m_pyGet(pyRequest);
 
-        if (pyObject)
-           return epics::pvLocal::GetService::shared_pointer(
-               new GetServiceImpl(pyObject));
+        if (pyObject){
+            epics::pvLocal::GetService::shared_pointer ptr = epics::pvLocal::GetService::shared_pointer(new GetServiceImpl(pyObject));
+            PyGilManager::gilStateRelease();
+            return ptr;
+        }
+        PyGilManager::gilStateRelease();
     }
 
     return GetService::shared_pointer();
