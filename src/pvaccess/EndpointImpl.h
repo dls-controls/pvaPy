@@ -46,6 +46,21 @@ private:
     boost::python::object m_pyRPC;
 };
 
+class epicsShareClass EndpointMonitorImpl : public  epics::pvLocal::EndpointMonitor
+{
+public:
+    EndpointMonitorImpl(const boost::python::object& pyMon)
+    : m_pyMon(pyMon)
+    {}
+
+    virtual epics::pvLocal::MonitorService::shared_pointer getMonitorService(epics::pvData::PVStructure::shared_pointer const &);
+
+    virtual ~EndpointMonitorImpl() {};
+
+private:
+    boost::python::object m_pyMon;
+};
+
 class epicsShareClass EndpointImpl
  : public epics::pvLocal::Endpoint,
    public std::tr1::enable_shared_from_this<EndpointImpl>
@@ -59,6 +74,8 @@ public:
     virtual epics::pvLocal::EndpointGetPtr getEndpointGet();
 
     virtual epics::pvLocal::EndpointRPCPtr getEndpointRPC();
+
+    virtual epics::pvLocal::EndpointMonitorPtr getEndpointMonitor();
 
 private:
     boost::python::object m_pyEndpoint;

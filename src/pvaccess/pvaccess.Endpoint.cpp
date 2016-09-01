@@ -27,6 +27,10 @@ class_<EndpointPy>("Endpoint",
         &EndpointPy::registerEndpointRPC, 
         args("endpointRPC"), 
         "")
+    .def("registerEndpointMonitor",
+        &EndpointPy::registerEndpointMonitor,
+        args("endpointMonitor"),
+        "")
 
 ;
 
