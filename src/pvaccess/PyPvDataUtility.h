@@ -186,9 +186,9 @@ void structureArrayFieldToPyList(const std::string& fieldName, const epics::pvDa
 //
 // Conversion PV Structure => PY {}
 //
-void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 
-void structureFieldToPyDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void structureFieldToPyDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 
 //
 //
@@ -206,13 +206,13 @@ boost::python::object getScalarArrayFieldAsPyObject(const std::string& fieldName
 //
 // Add PV Structure => PY {}
 // 
-void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 boost::python::object getStructureFieldAsPyObject(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, bool useNumPyArrays);
 
 //
 // Add PV Structure Array => PY {}
 // 
-void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 boost::python::object getStructureArrayFieldAsPyObject(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, bool useNumPyArrays);
 
 //

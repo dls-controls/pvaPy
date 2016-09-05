@@ -82,10 +82,10 @@ PvObject::operator boost::python::dict() const
     return toDict();
 }
 
-boost::python::dict PvObject::toDict() const
+boost::python::dict PvObject::toDict(bool addTypeID) const
 {
     boost::python::dict pyDict;
-    PyPvDataUtility::structureToPyDict(pvStructurePtr, pyDict, useNumPyArrays);
+    PyPvDataUtility::structureToPyDict(pvStructurePtr, pyDict, useNumPyArrays, addTypeID);
     return pyDict;
 }
 

@@ -4,10 +4,14 @@
 #include "boost/python/class.hpp"
 #include "boost/python/self.hpp"
 #include "boost/python/operators.hpp"
+#include "boost/python/overloads.hpp"
 #include "PvObject.h"
 #include "PvObjectPickleSuite.h"
 
 using namespace boost::python;
+
+
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PvObject_toDict_overloads, PvObject::toDict, 0, 1)
 
 //
 // PvObject class
@@ -1162,7 +1166,8 @@ class_<PvObject>("PvObject",
 
     .def("toDict", 
         &PvObject::toDict,
-        "Converts PV structure to python dictionary.\n\n:Returns: python key:value dictionary representing current PV structure in terms of field names and their values\n\n::\n\n    valueDict = pv.toDict()\n\n")
+		PvObject_toDict_overloads(args("addTypeID"),
+        "Converts PV structure to python dictionary.\n\n:Returns: python key:value dictionary representing current PV structure in terms of field names and their values\n\n::\n\n    valueDict = pv.toDict()\n\n"))
 
     .def("getStructureDict", 
         &PvObject::getStructureDict,

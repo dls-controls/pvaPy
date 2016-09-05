@@ -34,7 +34,7 @@ public:
     epics::pvData::StructureConstPtr getStructurePtr() const;
     operator epics::pvData::PVStructurePtr();
     operator boost::python::dict() const;
-    boost::python::dict toDict() const;
+    boost::python::dict toDict(bool addTypeID = false) const;
     boost::python::dict getStructureDict() const;
     PvType::DataType getDataType();
     friend std::ostream& operator<<(std::ostream& out, const PvObject& pvObject);
