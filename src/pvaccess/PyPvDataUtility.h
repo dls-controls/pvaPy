@@ -218,13 +218,13 @@ boost::python::object getStructureArrayFieldAsPyObject(const std::string& fieldN
 //
 // Add PV Union => PY {}
 // 
-void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 boost::python::object getUnionFieldAsPyObject(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, bool useNumPyArrays);
 
 //
 // Add PV Union Array => PY {}
 // 
-void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays);
+void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID = false);
 boost::python::object getUnionArrayFieldAsPyObject(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, bool useNumPyArrays);
 
 //
