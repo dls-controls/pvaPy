@@ -28,4 +28,8 @@ void EndpointPy::registerEndpointRPC(const boost::python::object& pyRPC)
     // TODO: set m_pyService to null
 }
 
+void EndpointPy::registerEndpointMonitor(const boost::python::object & pyMon)
+{
+	m_pyMon = pyMon;
+}
 

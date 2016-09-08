@@ -6,6 +6,7 @@
 #include "RpcServiceImpl.h"
 #include "GetServiceImpl.h"
 #include "PutServiceImpl.h"
+#include "MonitorServiceImpl.h"
 #include "EndpointPy.h"
 #include "PvObject.h"
 #include "PyGilManager.h"
@@ -72,9 +73,30 @@ epics::pvLocal::Service::shared_pointer EndpointRPCImpl::getRpcService(epics::pv
     return epics::pvLocal::Service::shared_pointer();
 }
 
+epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorService(epics::pvData::PVStructure::shared_pointer const & pvRequest)
+{
+	printf("EndpointMonitorImpl::getMonitorService called\n");
+    if (m_pyMon)
+    {
+        PvObject pyRequest(pvRequest);
+
+        PyGilManager::gilStateEnsure();
+
+        boost::python::object pyObject = m_pyMon(pyRequest);
+
+        PyGilManager::gilStateRelease();
+
+        if (pyObject)
+           return epics::pvLocal::MonitorService::shared_pointer(new MonitorServiceImpl(pyObject));
+    }
+
+    return epics::pvLocal::MonitorService::shared_pointer();
+}
+
 
 epics::pvLocal::EndpointGetPtr EndpointImpl::getEndpointGet()
 {
+	printf("EndpointImpl::getEndpointGet called\n");
     boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
     if (pythonEndpointExtract.check())
     {
@@ -107,6 +129,7 @@ epics::pvLocal::EndpointPutPtr EndpointImpl::getEndpointPut()
 
 epics::pvLocal::EndpointRPCPtr EndpointImpl::getEndpointRPC()
 {
+	printf("EndpointImpl::getEndpointRPC called\n");
     boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
     if (pythonEndpointExtract.check())
     {
@@ -120,4 +143,19 @@ epics::pvLocal::EndpointRPCPtr EndpointImpl::getEndpointRPC()
     return EndpointRPCPtr();
 }
 
+epics::pvLocal::EndpointMonitorPtr EndpointImpl::getEndpointMonitor()
+{
+	printf("EndpointImpl::getEndpointMonitor called\n");
+    boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
+    if (pythonEndpointExtract.check())
+    {
+        EndpointPy ep = pythonEndpointExtract();
+
+        if (ep.m_pyMon)
+        {
+            return EndpointMonitorPtr(new EndpointMonitorImpl(ep.m_pyMon));
+        }
+    }
+	return EndpointMonitorPtr();
+}
 

@@ -30,11 +30,13 @@ public:
 
     void registerEndpointPut(const boost::python::object & pyPut);
 
+    void registerEndpointMonitor(const boost::python::object & pyMon);
 
     boost::python::object m_pyRPC;
     boost::python::object m_pyService;
     boost::python::object m_pyGet;
     boost::python::object m_pyPut;
+    boost::python::object m_pyMon;
 };
 
 
