@@ -841,10 +841,13 @@ void stringArrayToPyList(const epics::pvData::StringArray& stringArray, boost::p
 //
 // Conversion PV Structure => PY {}
 //
-void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays)
+void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
     epics::pvData::StructureConstPtr structurePtr = pvStructurePtr->getStructure();
     epics::pvData::StringArray fieldNames = structurePtr->getFieldNames();
+    if (addTypeID){
+    	pyDict["typeid"] = pvStructurePtr->getStructure()->getID();
+    }
     for (unsigned int i = 0; i < fieldNames.size(); ++i) {
         std::string fieldName = fieldNames[i];
         epics::pvData::FieldConstPtr fieldPtr = getField(fieldName, pvStructurePtr);
@@ -863,19 +866,19 @@ void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boos
                 break;
             }
             case epics::pvData::structure: {
-                addStructureFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays);
+                addStructureFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays, addTypeID);
                 break;
             }
             case epics::pvData::structureArray: {
-                addStructureArrayFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays);
+                addStructureArrayFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays, addTypeID);
                 break;
             }
             case epics::pvData::union_: {
-                addUnionFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays);
+                addUnionFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays, addTypeID);
                 break;
             }
             case epics::pvData::unionArray: {
-                addUnionArrayFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays);
+                addUnionArrayFieldToDict(fieldName, pvStructurePtr, pyDict, useNumPyArrays, addTypeID);
                 break;
             }
             default: {
@@ -885,9 +888,9 @@ void structureToPyDict(const epics::pvData::PVStructurePtr& pvStructurePtr, boos
     }
 }
 
-void structureFieldToPyDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays)
+void structureFieldToPyDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
-    structureToPyDict(getStructureField(fieldName, pvStructurePtr), pyDict, useNumPyArrays);
+    structureToPyDict(getStructureField(fieldName, pvStructurePtr), pyDict, useNumPyArrays, addTypeID);
 }
 
 //
@@ -999,10 +1002,10 @@ boost::python::object getScalarArrayFieldAsPyObject(const std::string& fieldName
 //
 // Add PV Structure => PY {}
 // 
-void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays)
+void addStructureFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
     boost::python::dict pyDict2;
-    structureFieldToPyDict(fieldName, pvStructurePtr, pyDict2, useNumPyArrays);
+    structureFieldToPyDict(fieldName, pvStructurePtr, pyDict2, useNumPyArrays, addTypeID);
     pyDict[fieldName] = pyDict2;
 }
 
@@ -1016,7 +1019,7 @@ boost::python::object getStructureFieldAsPyObject(const std::string& fieldName, 
 //
 // Add PV Structure Array => PY {}
 // 
-void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays) 
+void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
     boost::python::list pyList;
     epics::pvData::PVStructureArrayPtr structureArrayPtr = getStructureArrayField(fieldName, pvStructurePtr);
@@ -1024,7 +1027,7 @@ void addStructureArrayFieldToDict(const std::string& fieldName, const epics::pvD
     epics::pvData::PVStructureArray::const_svector arrayData(structureArrayPtr->view());
     for (int i = 0; i < nDataElements; ++i) {
         boost::python::dict pyDict2;
-        structureToPyDict(arrayData[i], pyDict2, useNumPyArrays);   
+        structureToPyDict(arrayData[i], pyDict2, useNumPyArrays, addTypeID);
         pyList.append(pyDict2);   
     }
     pyDict[fieldName] = pyList;
@@ -1040,7 +1043,7 @@ boost::python::object getStructureArrayFieldAsPyObject(const std::string& fieldN
 //
 // Add PV Union => PY {}
 // 
-void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays)
+void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
     epics::pvData::PVUnionPtr pvUnionPtr = pvStructurePtr->getSubField<epics::pvData::PVUnion>(fieldName);
     std::string unionFieldName = PvaConstants::ValueFieldKey;
@@ -1066,7 +1069,7 @@ void addUnionFieldToDict(const std::string& fieldName, const epics::pvData::PVSt
     }
 
     boost::python::dict pyDict2;
-    structureToPyDict(unionPvStructurePtr, pyDict2, useNumPyArrays);
+    structureFieldToPyDict(unionFieldName, unionPvStructurePtr, pyDict2, useNumPyArrays, addTypeID);
     boost::python::tuple pyTuple = boost::python::make_tuple(pyDict2);
     pyDict[fieldName] = pyTuple;
 }
@@ -1081,7 +1084,7 @@ boost::python::object getUnionFieldAsPyObject(const std::string& fieldName, cons
 //
 // Add PV Union Array => PY {}
 // 
-void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays)
+void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData::PVStructurePtr& pvStructurePtr, boost::python::dict& pyDict, bool useNumPyArrays, bool addTypeID)
 {
     epics::pvData::PVUnionArrayPtr pvUnionArrayPtr = pvStructurePtr->getSubField<epics::pvData::PVUnionArray>(fieldName);
     epics::pvData::shared_vector<const epics::pvData::PVUnionPtr> pvUnions = pvUnionArrayPtr->view();
@@ -1104,7 +1107,7 @@ void addUnionArrayFieldToDict(const std::string& fieldName, const epics::pvData:
         unionPvStructurePtr->getSubField(fieldName)->copy(*pvField);
 
         boost::python::dict pyDict2;
-        structureToPyDict(unionPvStructurePtr, pyDict2, useNumPyArrays);
+        structureFieldToPyDict(fieldName, unionPvStructurePtr, pyDict2, useNumPyArrays, addTypeID);
         boost::python::tuple pyTuple = boost::python::make_tuple(pyDict2);
         pyList.append(pyTuple);
     }
