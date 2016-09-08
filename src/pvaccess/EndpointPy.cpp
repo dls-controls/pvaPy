@@ -11,6 +11,11 @@ void EndpointPy::registerEndpointGet(const boost::python::object& pyGet)
     m_pyGet = pyGet;
 }
 
+void EndpointPy::registerEndpointPut(const boost::python::object& pyPut)
+{
+    m_pyPut = pyPut;
+}
+
 void EndpointPy::registerService(const boost::python::object& pyService)
 {
     m_pyService = pyService;

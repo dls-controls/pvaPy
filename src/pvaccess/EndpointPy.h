@@ -28,9 +28,13 @@ public:
 
     void registerEndpointGet(const boost::python::object & pyGet);
 
+    void registerEndpointPut(const boost::python::object & pyPut);
+
+
     boost::python::object m_pyRPC;
     boost::python::object m_pyService;
     boost::python::object m_pyGet;
+    boost::python::object m_pyPut;
 };
 
 

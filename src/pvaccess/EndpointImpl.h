@@ -31,6 +31,22 @@ private:
 };
 
 
+class epicsShareClass EndpointPutImpl : public epics::pvLocal::EndpointPut
+{
+public:
+    EndpointPutImpl(const boost::python::object& pyPut)
+    : m_pyPut(pyPut)
+    {}
+
+    virtual epics::pvLocal::PutService::shared_pointer getPutService(epics::pvData::PVStructure::shared_pointer const & pvRequest);
+
+    virtual ~EndpointPutImpl() {};
+
+private:
+    boost::python::object m_pyPut;
+};
+
+
 class epicsShareClass EndpointRPCImpl : public  epics::pvLocal::EndpointRPC
 {
 public:
@@ -57,6 +73,8 @@ public:
     {}
 
     virtual epics::pvLocal::EndpointGetPtr getEndpointGet();
+
+    virtual epics::pvLocal::EndpointPutPtr getEndpointPut();
 
     virtual epics::pvLocal::EndpointRPCPtr getEndpointRPC();
 

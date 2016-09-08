@@ -5,6 +5,7 @@
 #include "EndpointImpl.h"
 #include "RpcServiceImpl.h"
 #include "GetServiceImpl.h"
+#include "PutServiceImpl.h"
 #include "EndpointPy.h"
 #include "PvObject.h"
 #include "PyGilManager.h"
@@ -33,6 +34,22 @@ epics::pvLocal::GetService::shared_pointer EndpointGetImpl::getGetService(epics:
 
     return GetService::shared_pointer();
 }
+
+epics::pvLocal::PutService::shared_pointer EndpointPutImpl::getPutService(epics::pvData::PVStructure::shared_pointer const & pvRequest)
+{
+    if (m_pyPut)
+    {
+        PvObject pyRequest(pvRequest);
+        boost::python::object pyObject = m_pyPut(pyRequest);
+
+        if (pyObject)
+           return epics::pvLocal::PutService::shared_pointer(
+               new PutServiceImpl(pyObject));
+    }
+
+    return PutService::shared_pointer();
+}
+
 
 
 epics::pvLocal::Service::shared_pointer EndpointRPCImpl::getRpcService(epics::pvData::PVStructure::shared_pointer const & pvRequest)
@@ -69,6 +86,22 @@ epics::pvLocal::EndpointGetPtr EndpointImpl::getEndpointGet()
         }
     }
     return EndpointGetPtr();
+}
+
+
+epics::pvLocal::EndpointPutPtr EndpointImpl::getEndpointPut()
+{
+    boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
+    if (pythonEndpointExtract.check())
+    {
+        EndpointPy ep = pythonEndpointExtract();
+
+        if (ep.m_pyPut)
+        {
+            return EndpointPutPtr(new EndpointPutImpl(ep.m_pyPut));
+        }
+    }
+    return EndpointPutPtr();
 }
 
 

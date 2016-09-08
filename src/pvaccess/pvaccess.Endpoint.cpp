@@ -23,6 +23,10 @@ class_<EndpointPy>("Endpoint",
         &EndpointPy::registerEndpointGet, 
         args("endpointGet"), 
         "")
+    .def("registerEndpointPut", 
+        &EndpointPy::registerEndpointPut, 
+        args("endpointPut"), 
+        "")
     .def("registerEndpointRPC", 
         &EndpointPy::registerEndpointRPC, 
         args("endpointRPC"), 
