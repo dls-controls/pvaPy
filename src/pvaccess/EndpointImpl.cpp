@@ -75,7 +75,6 @@ epics::pvLocal::Service::shared_pointer EndpointRPCImpl::getRpcService(epics::pv
 
 epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorService(epics::pvData::PVStructure::shared_pointer const & pvRequest)
 {
-	printf("EndpointMonitorImpl::getMonitorService called\n");
     if (m_pyMon)
     {
         PvObject pyRequest(pvRequest);
@@ -96,7 +95,6 @@ epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorSe
 
 epics::pvLocal::EndpointGetPtr EndpointImpl::getEndpointGet()
 {
-	printf("EndpointImpl::getEndpointGet called\n");
     boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
     if (pythonEndpointExtract.check())
     {
@@ -129,7 +127,6 @@ epics::pvLocal::EndpointPutPtr EndpointImpl::getEndpointPut()
 
 epics::pvLocal::EndpointRPCPtr EndpointImpl::getEndpointRPC()
 {
-	printf("EndpointImpl::getEndpointRPC called\n");
     boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
     if (pythonEndpointExtract.check())
     {
@@ -145,7 +142,6 @@ epics::pvLocal::EndpointRPCPtr EndpointImpl::getEndpointRPC()
 
 epics::pvLocal::EndpointMonitorPtr EndpointImpl::getEndpointMonitor()
 {
-	printf("EndpointImpl::getEndpointMonitor called\n");
     boost::python::extract<EndpointPy> pythonEndpointExtract(m_pyEndpoint);
     if (pythonEndpointExtract.check())
     {
