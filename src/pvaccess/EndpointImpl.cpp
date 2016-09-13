@@ -41,11 +41,17 @@ epics::pvLocal::PutService::shared_pointer EndpointPutImpl::getPutService(epics:
     if (m_pyPut)
     {
         PvObject pyRequest(pvRequest);
+
+        PyGilManager::gilStateEnsure();
+
         boost::python::object pyObject = m_pyPut(pyRequest);
 
-        if (pyObject)
-           return epics::pvLocal::PutService::shared_pointer(
-               new PutServiceImpl(pyObject));
+        if (pyObject){
+            epics::pvLocal::PutService::shared_pointer ptr = epics::pvLocal::PutService::shared_pointer(new PutServiceImpl(pyObject));
+            PyGilManager::gilStateRelease();
+            return ptr;
+        }
+        PyGilManager::gilStateRelease();
     }
 
     return PutService::shared_pointer();
