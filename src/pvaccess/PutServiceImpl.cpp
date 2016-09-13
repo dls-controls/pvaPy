@@ -62,6 +62,10 @@ epics::pvData::PVStructurePtr PutServiceImpl::getPVStructure()
 
 PutServiceImpl::~PutServiceImpl()
 {
+    PyGilManager::gilStateEnsure();
+    boost::python::object dummy;
+    pyService = dummy;
+    PyGilManager::gilStateRelease();
 }
 
 
