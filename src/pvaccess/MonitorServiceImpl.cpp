@@ -35,7 +35,10 @@ void MonitorServiceImpl::init()
 
 MonitorServiceImpl::~MonitorServiceImpl()
 {
-	// TODO Auto-generated destructor stub
+    PyGilManager::gilStateEnsure();
+    boost::python::object dummy;
+    pyService = dummy;
+    PyGilManager::gilStateRelease();
 }
 
 void MonitorServiceImpl::addListener(epics::pvLocal::MonitorServiceListenerPtr const & listener)
