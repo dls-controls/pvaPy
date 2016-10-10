@@ -92,7 +92,11 @@ epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorSe
         PyGilManager::gilStateRelease();
 
         if (pyObject)
-           return epics::pvLocal::MonitorService::shared_pointer(new MonitorServiceImpl(pyObject));
+        {
+           MonitorServiceImplPtr xx = MonitorServiceImplPtr(new MonitorServiceImpl(pyObject));
+           xx->init();
+           return xx;
+        }   
     }
 
     return epics::pvLocal::MonitorService::shared_pointer();
