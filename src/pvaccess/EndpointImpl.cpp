@@ -81,6 +81,8 @@ epics::pvLocal::Service::shared_pointer EndpointRPCImpl::getRpcService(epics::pv
 
 epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorService(epics::pvData::PVStructure::shared_pointer const & pvRequest)
 {
+    MonitorServiceImplPtr xx;
+
     if (m_pyMon)
     {
         PvObject pyRequest(pvRequest);
@@ -89,17 +91,15 @@ epics::pvLocal::MonitorService::shared_pointer EndpointMonitorImpl::getMonitorSe
 
         boost::python::object pyObject = m_pyMon(pyRequest);
 
-        PyGilManager::gilStateRelease();
-
         if (pyObject)
         {
-           MonitorServiceImplPtr xx = MonitorServiceImplPtr(new MonitorServiceImpl(pyObject));
+           xx = MonitorServiceImplPtr(new MonitorServiceImpl(pyObject));
            xx->init();
-           return xx;
-        }   
-    }
+        } 
 
-    return epics::pvLocal::MonitorService::shared_pointer();
+        PyGilManager::gilStateRelease();  
+    }
+    return xx;
 }
 
 
