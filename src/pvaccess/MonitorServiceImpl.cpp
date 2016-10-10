@@ -16,10 +16,33 @@ MonitorServiceImpl::MonitorServiceImpl(const boost::python::object& pyService):
 {
 }
 
+void MonitorServiceImpl::init()
+{
+    PyGilManager::gilStateEnsure();
+
+    // Call into python object to request the structure
+    boost::python::object pyObject = boost::python::call_method<boost::python::object>(pyService.ptr(), "getUpdater");
+
+    boost::python::extract<MonitorServiceUpdater &> updaterExtract(pyObject);
+    if (updaterExtract.check()) {
+        MonitorServiceUpdater & updater = updaterExtract();
+        updater.registerMonitorService(shared_from_this());
+    }
+
+    // Release GIL.
+    PyGilManager::gilStateRelease();
+}
+
 MonitorServiceImpl::~MonitorServiceImpl()
 {
 	// TODO Auto-generated destructor stub
 }
+
+void MonitorServiceImpl::addListener(epics::pvLocal::MonitorServiceListenerPtr const & listener)
+{
+    this->listener = listener;
+}
+
 
 epics::pvData::PVStructurePtr MonitorServiceImpl::getPVStructure()
 {

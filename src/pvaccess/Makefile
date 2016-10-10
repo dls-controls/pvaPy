@@ -68,6 +68,7 @@ pvaccess_SRCS += pvaccess.NtTable.cpp
 
 pvaccess_SRCS += pvaccess.Channel.cpp
 pvaccess_SRCS += pvaccess.Endpoint.cpp
+pvaccess_SRCS += pvaccess.MonitorServiceUpdater.cpp
 pvaccess_SRCS += pvaccess.RpcClient.cpp
 pvaccess_SRCS += pvaccess.RpcServer.cpp
 pvaccess_SRCS += pvaccess.PvaServer.cpp

@@ -50,6 +50,8 @@ void wrapRpcServer();
 void wrapRpcClient();
 void wrapPvaServer();
 
+void wrapMonitorServiceUpdater();
+
 // Exceptions
 PyObject* pvaException = NULL;
 PyObject* fieldNotFoundException = NULL;
@@ -105,4 +107,6 @@ BOOST_PYTHON_MODULE(pvaccess)
     wrapRpcClient();
     wrapRpcServer();
     wrapPvaServer();
+
+    wrapMonitorServiceUpdater();
 }
