@@ -38,7 +38,6 @@ Channel::Channel(const std::string& channelName, PvProvider::ProviderType provid
     monitorRequester(new ChannelMonitorRequesterImpl(channelName)),
     monitor(),
     monitorThreadDone(true),
-    pvObjectMonitorQueue(),
     subscriberMap(),
     subscriberMutex(),
     monitorElementProcessingMutex(),
@@ -53,9 +52,10 @@ Channel::Channel(const Channel& c) :
     channel(c.channel),
     monitorRequester(c.monitorRequester),
     monitorThreadDone(true),
-    pvObjectMonitorQueue(),
     subscriberMap(),
     subscriberMutex(),
+    monitorElementProcessingMutex(),
+    monitorThreadMutex(),
     monitorThreadExitEvent(),
     timeout(DefaultTimeout)
 {
@@ -577,10 +577,9 @@ void Channel::stopMonitor()
     monitor->stop();
     logger.debug("Monitor stopped, waiting for thread exit");
     ChannelMonitorRequesterImpl* monitorRequester = getMonitorRequester();
-    monitorRequester->cancelGetQueuedPvObject();
+    logger.debug("Stopping requester");
+    monitorRequester->stop();
     monitorThreadExitEvent.wait(getTimeout());
-    logger.debug("Clearing requester queue");
-    monitorRequester->clearPvObjectQueue();
 }
 
 bool Channel::isMonitorThreadDone() const

@@ -92,6 +92,7 @@ pvaccess_SRCS += InvalidState.cpp
 pvaccess_SRCS += MonitorServiceImpl.cpp
 pvaccess_SRCS += NtTable.cpp
 pvaccess_SRCS += NtType.cpp
+pvaccess_SRCS += ObjectAlreadyExists.cpp
 pvaccess_SRCS += ObjectNotFound.cpp
 pvaccess_SRCS += PutServiceImpl.cpp
 pvaccess_SRCS += PvaClient.cpp
